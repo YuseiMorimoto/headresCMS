@@ -17,6 +17,7 @@
     "lint-content": "tsx scripts/lint-content.ts"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^13.7.0",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
     "astro": "^6.4.8",

@@ -1,31 +1,26 @@
 ---
-import type { CollectionEntry } from "astro:content";
-
 type Props = {
-  post: CollectionEntry<"posts">;
+  title: string;
+  publishedAt: Date;
+  updatedAt: Date;
 };
 
-const { post } = Astro.props;
-const date = post.data.publishedAt.toLocaleDateString("ja-JP");
-const updated = post.data.updatedAt.toLocaleDateString("ja-JP");
+const { title, publishedAt, updatedAt } = Astro.props;
+const date = publishedAt.toLocaleDateString("ja-JP");
+const updated = updatedAt.toLocaleDateString("ja-JP");
 ---
 
-<article>
-  <header class="mb-8">
-    <h1 class="mb-4 text-3xl font-bold leading-tight">{post.data.title}</h1>
-    <p class="text-sm text-gray-500">
-      公開日: <time datetime={post.data.publishedAt.toISOString()}>{date}</time>
-      {
-        post.data.updatedAt > post.data.publishedAt && (
-          <>
-            {" "}
-            / 更新日:{" "}
-            <time datetime={post.data.updatedAt.toISOString()}>{updated}</time>
-          </>
-        )
-      }
-    </p>
-  </header>
-
-  <slot />
-</article>
+<header class="mb-8">
+  <h1 class="mb-4 text-3xl font-bold leading-tight">{title}</h1>
+  <p class="text-sm text-gray-500">
+    公開日: <time datetime={publishedAt.toISOString()}>{date}</time>
+    {
+      updatedAt > publishedAt && (
+        <>
+          {" "}
+          / 更新日: <time datetime={updatedAt.toISOString()}>{updated}</time>
+        </>
+      )
+    }
+  </p>
+</header>

@@ -1,0 +1,12 @@
+---
+type Props = {
+  message?: string;
+};
+
+const { message = "このページは下書きのプレビューです。公開前の内容が表示されています。" } =
+  Astro.props;
+---
+
+<div class="mb-6 rounded border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-900">
+  <strong>プレビューモード</strong> — {message}
+</div>

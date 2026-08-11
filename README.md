@@ -17,6 +17,17 @@ CONTENT_SOURCE=local npm run build
 npx wrangler dev   # Worker + 静的アセットのローカル確認
 ```
 
+## プレビュー
+
+microCMS の下書きを確認する SSR ルートです。
+
+```
+/preview/?id={contentId}&draftKey={draftKey}
+```
+
+- `noindex` が出力されます（検索エンジンにインデックスされません）
+- microCMS の API キーが `.dev.vars` に設定されている必要があります
+
 ## 仕様
 
 `docs/` フォルダに仕様書を配置。エージェント向けルールは `AGENTS.md` を参照。
