@@ -1,0 +1,45 @@
+      - name: Generate draft article
+        run: npm run generate-draft
+        env:
+          DRAFT_TITLE: ${{ inputs.title }}
+          DRAFT_KEYWORDS: ${{ inputs.keywords }}
+          DRAFT_TYPE: ${{ inputs.article_type }}
+          DRAFT_CLUSTER: ${{ inputs.cluster }}
+          DRAFT_REFERENCE_URL: ${{ inputs.reference_url }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CONTENT_SOURCE: ${{ vars.CONTENT_SOURCE || 'local' }}
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+
+      - name: Create Draft PR (local mode)
+        if: (vars.CONTENT_SOURCE || 'local') == 'local'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DRAFT_PATH=$(cat draft-output.txt)
+          BRANCH="draft/$(basename "$DRAFT_PATH" .md)-$(date +%s)"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add "$DRAFT_PATH"
+          git commit -m "draft: ${{ inputs.title }}"
+          git push -u origin "$BRANCH"
+          cat > /tmp/pr-body.md <<'PREOF'
+          ## 下書き記事
+
+          AI が生成した下書きです。**公開前に必ず人間がレビュー・編集してください。**
+
+          > ⚠️ **firsthand（一次情報）はプレースホルダです。** 公開前に必ず実際の一次情報に置き換えてください。
+
+          ### チェックリスト
+
+          - [ ] firsthand（一次情報）を記入した
+          - [ ] 事実・数値を一次ソースで確認した
+          - [ ] offers の slug が KV に存在する
+          - [ ] 同一クラスタの既存記事とカニバっていない
+          - [ ] 薬機法・景表法に触れる表現がない
+
+          ---
+          _この PR は draft ワークフローにより自動生成されました。自動マージ・自動公開は行いません。_
+          PREOF
+          gh pr create --draft --title "draft: ${{ inputs.title }}" --body-file /tmp/pr-body.md

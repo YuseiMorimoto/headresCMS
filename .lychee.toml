@@ -1,0 +1,4 @@
+exclude_path = ["/go/"]
+
+[requests]
+user_agent = "Mozilla/5.0 (compatible; affiliate-site-linkcheck/1.0)"
