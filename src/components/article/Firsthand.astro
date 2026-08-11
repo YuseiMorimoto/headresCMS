@@ -1,0 +1,14 @@
+---
+type Props = {
+  content: string;
+};
+
+const { content } = Astro.props;
+---
+
+<section class="my-10 rounded-lg border border-blue-200 bg-blue-50 p-6">
+  <h2 class="mb-4 text-xl font-bold text-blue-900">実際に使って分かったこと</h2>
+  <div class="prose prose-blue max-w-none text-gray-800">
+    <p class="whitespace-pre-wrap">{content}</p>
+  </div>
+</section>

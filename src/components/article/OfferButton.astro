@@ -1,0 +1,21 @@
+---
+type Props = {
+  slug: string;
+  label: string;
+  context?: string;
+};
+
+const { slug, label, context } = Astro.props;
+---
+
+<div class="my-6">
+  {context && <p class="mb-2 text-sm text-gray-600">{context}</p>}
+  <a
+    href={`/go/${slug}`}
+    rel="sponsored nofollow noopener"
+    target="_blank"
+    class="inline-block rounded bg-blue-600 px-6 py-3 text-center font-semibold text-white no-underline hover:bg-blue-700"
+  >
+    {label}
+  </a>
+</div>

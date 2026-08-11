@@ -1,0 +1,38 @@
+{
+  "name": "affiliate-site",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "prebuild": "tsx scripts/validate-clusters.ts && tsx scripts/build-redirects.ts",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "sync-links": "tsx scripts/sync-links.ts",
+    "check-offers": "tsx scripts/check-offers.ts",
+    "export-content": "tsx scripts/export-content.ts",
+    "lint-content": "tsx scripts/lint-content.ts"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^6.4.8",
+    "gray-matter": "^4.0.3",
+    "tailwindcss": "^4.1.11",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@cloudflare/workers-types": "^5.20260811.1",
+    "@tailwindcss/vite": "^4.1.11",
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.2",
+    "wrangler": "^4.120.1"
+  },
+  "overrides": {
+    "vite": "^7.3.6"
+  }
+}

@@ -1,0 +1,59 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PostCard from "@/components/ui/PostCard.astro";
+import { site } from "@/config/site.ts";
+import type { GetStaticPaths } from "astro";
+import { getCollection } from "astro:content";
+
+export const getStaticPaths = (async () => {
+  const pageSize = 20;
+  const posts = (await getCollection("posts", ({ data }) => !data.noindex)).sort(
+    (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
+  );
+  const totalPages = Math.ceil(posts.length / pageSize);
+
+  return Array.from({ length: totalPages }, (_, i) => ({
+    params: { page: String(i + 1) },
+    props: {
+      posts: posts.slice(i * pageSize, (i + 1) * pageSize),
+      currentPage: i + 1,
+      totalPages,
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+const { posts, currentPage, totalPages } = Astro.props;
+---
+
+<BaseLayout
+  title={`新着記事一覧（${currentPage}ページ目）`}
+  description={`${site.name}の新着記事一覧です。`}
+  canonical={`${site.url}/page/${currentPage}/`}
+>
+  <h1 class="mb-6 text-3xl font-bold">新着記事一覧</h1>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    {posts.map((post) => <PostCard post={post} />)}
+  </div>
+
+  <nav class="mt-8 flex justify-between text-sm">
+    {
+      currentPage > 1 ? (
+        <a href={`/page/${currentPage - 1}/`} class="text-blue-600 hover:underline">
+          ← 前のページ
+        </a>
+      ) : (
+        <span />
+      )
+    }
+    {
+      currentPage < totalPages ? (
+        <a href={`/page/${currentPage + 1}/`} class="text-blue-600 hover:underline">
+          次のページ →
+        </a>
+      ) : (
+        <span />
+      )
+    }
+  </nav>
+</BaseLayout>

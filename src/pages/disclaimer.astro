@@ -1,0 +1,18 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { site } from "@/config/site.ts";
+---
+
+<BaseLayout
+  title="免責事項"
+  description={`${site.name}の免責事項です。`}
+  canonical={`${site.url}/disclaimer/`}
+>
+  <h1 class="mb-6 text-3xl font-bold">免責事項</h1>
+  <div class="prose max-w-none">
+    <p>
+      当サイトの情報は参考情報であり、正確性・完全性を保証するものではありません。最終的な判断はご自身の責任で行ってください。
+    </p>
+    <p>アフィリエイトリンクを通じて購入・申込みが行われた場合、当サイトに報酬が発生することがあります。</p>
+  </div>
+</BaseLayout>

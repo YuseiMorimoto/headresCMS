@@ -1,0 +1,90 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PrNotice from "@/components/article/PrNotice.astro";
+import Firsthand from "@/components/article/Firsthand.astro";
+import OfferButton from "@/components/article/OfferButton.astro";
+import PostCard from "@/components/ui/PostCard.astro";
+import Toc from "@/components/article/Toc.astro";
+import ArticleHeader from "@/components/article/ArticleHeader.astro";
+import { CLUSTERS, clusterById } from "@/config/clusters.ts";
+import { extractToc } from "@/lib/toc.ts";
+import { buildArticleJsonLd, buildBreadcrumbJsonLd, clusterUrl } from "@/lib/schema.ts";
+import { getCollection, getEntry, render as renderEntry } from "astro:content";
+
+export async function getStaticPaths() {
+  return CLUSTERS.map((cluster) => ({
+    params: { cluster: cluster.id },
+  }));
+}
+
+const { cluster } = Astro.params;
+const clusterInfo = clusterById.get(cluster!)!;
+
+const allPosts = await getCollection("posts", ({ data }) => !data.noindex);
+const clusterPosts = allPosts
+  .filter((p) => p.data.cluster === cluster)
+  .sort((a, b) => a.data.publishedAt.getTime() - b.data.publishedAt.getTime());
+
+const pillar = await getEntry("posts", clusterInfo.pillarSlug);
+if (!pillar) {
+  throw new Error(`ピラー記事が見つかりません: ${clusterInfo.pillarSlug}`);
+}
+
+const childPosts = clusterPosts.filter((p) => p.id !== pillar.id);
+const { Content, headings } = await renderEntry(pillar);
+
+const tocItems =
+  headings && headings.length > 0
+    ? headings
+        .filter((h) => h.depth <= 3 && h.depth >= 2)
+        .map((h) => ({
+          id: h.slug,
+          text: h.text,
+          level: h.depth as 2 | 3,
+        }))
+    : extractToc(pillar.data.body);
+
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: clusterInfo.name, url: clusterUrl(cluster!) },
+];
+
+const jsonLd = [
+  buildArticleJsonLd(pillar),
+  buildBreadcrumbJsonLd(breadcrumbs),
+];
+---
+
+<BaseLayout
+  title={pillar.data.title}
+  description={clusterInfo.description}
+  canonical={clusterUrl(cluster!)}
+  ogImage={pillar.data.heroImage?.url}
+  jsonLd={jsonLd}
+  breadcrumbs={breadcrumbs}
+>
+  <PrNotice />
+
+  <ArticleHeader post={pillar} />
+
+  <Toc items={tocItems} />
+
+  <div class="prose max-w-none">
+    <Content />
+  </div>
+
+  {
+    pillar.data.offers.map((offer) => (
+      <OfferButton slug={offer.slug} label={offer.label} context={offer.context} />
+    ))
+  }
+
+  <Firsthand content={pillar.data.firsthand} />
+
+  <section class="mt-12">
+    <h2 class="mb-6 text-2xl font-bold">{clusterInfo.name}の記事一覧</h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {childPosts.map((post) => <PostCard post={post} />)}
+    </div>
+  </section>
+</BaseLayout>

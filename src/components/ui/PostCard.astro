@@ -1,0 +1,21 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type Props = {
+  post: CollectionEntry<"posts">;
+  showDescription?: boolean;
+};
+
+const { post, showDescription = true } = Astro.props;
+const href = `/c/${post.data.cluster}/${post.id}/`;
+---
+
+<article class="rounded border border-gray-200 p-4">
+  <a href={href} class="text-lg font-semibold text-blue-600 no-underline hover:underline">
+    {post.data.title}
+  </a>
+  {showDescription && <p class="mt-2 text-sm text-gray-600">{post.data.description}</p>}
+  <p class="mt-2 text-xs text-gray-400">
+    {post.data.publishedAt.toLocaleDateString("ja-JP")}
+  </p>
+</article>

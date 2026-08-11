@@ -1,0 +1,24 @@
+[
+  {
+    "slug": "offer-a",
+    "url": "https://example.com/track/offer-a",
+    "asp": "a8",
+    "subIdParam": null,
+    "label": "公式サイトを見る",
+    "active": true,
+    "fallbackPath": "/c/example-a/",
+    "note": "ダミー案件A",
+    "updatedAt": "2026-08-11T00:00:00Z"
+  },
+  {
+    "slug": "offer-b",
+    "url": "https://example.com/track/offer-b",
+    "asp": "moshimo",
+    "subIdParam": null,
+    "label": "詳細を見る",
+    "active": true,
+    "fallbackPath": "/c/example-b/",
+    "note": "ダミー案件B",
+    "updatedAt": "2026-08-11T00:00:00Z"
+  }
+]

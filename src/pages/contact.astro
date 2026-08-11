@@ -1,0 +1,34 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { site } from "@/config/site.ts";
+---
+
+<BaseLayout
+  title="お問い合わせ"
+  description={`${site.name}へのお問い合わせはこちらから。`}
+  canonical={`${site.url}/contact/`}
+  noindex={true}
+>
+  <h1 class="mb-4 text-3xl font-bold">お問い合わせ</h1>
+
+  <p class="mb-4 text-gray-600">
+    返信まで3〜5営業日を目安にご連絡いたします。商品の購入後サポートや個別の投資助言には対応しておりません。
+  </p>
+
+  <p class="mb-6 text-sm">
+    フォームが表示されない場合は
+    <a href={site.contactFormDirectUrl} class="text-blue-600 hover:underline" target="_blank" rel="noopener">
+      こちらから直接お問い合わせください
+    </a>
+    。
+  </p>
+
+  <iframe
+    src={site.contactFormUrl}
+    width="100%"
+    height="900"
+    loading="lazy"
+    title="お問い合わせフォーム"
+    style="border:0"
+  ></iframe>
+</BaseLayout>

@@ -1,0 +1,33 @@
+name: deploy
+on:
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: [content-published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22.12"
+          cache: npm
+      - run: npm ci
+      - run: npx astro check
+        env:
+          CONTENT_SOURCE: local
+      - run: npm run build
+        env:
+          CONTENT_SOURCE: local
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+          PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+          PUBLIC_IMAGE_BASE: ${{ vars.PUBLIC_IMAGE_BASE }}
+      - run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

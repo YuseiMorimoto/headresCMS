@@ -1,0 +1,126 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PrNotice from "@/components/article/PrNotice.astro";
+import Firsthand from "@/components/article/Firsthand.astro";
+import OfferButton from "@/components/article/OfferButton.astro";
+import RelatedPosts from "@/components/article/RelatedPosts.astro";
+import Toc from "@/components/article/Toc.astro";
+import ArticleHeader from "@/components/article/ArticleHeader.astro";
+import { clusterById } from "@/config/clusters.ts";
+import { getRelatedPosts } from "@/lib/related.ts";
+import { extractToc } from "@/lib/toc.ts";
+import {
+  articleUrl,
+  buildArticleJsonLd,
+  buildBreadcrumbJsonLd,
+  clusterUrl,
+} from "@/lib/schema.ts";
+import { getCollection, getEntry, render as renderEntry } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts");
+  return posts.map((post) => ({
+    params: { cluster: post.data.cluster, slug: post.id },
+  }));
+}
+
+const { cluster, slug } = Astro.params;
+const post = await getEntry("posts", slug!);
+
+if (!post || post.data.cluster !== cluster) {
+  return Astro.redirect("/404");
+}
+
+const allPosts = await getCollection("posts", ({ data }) => !data.noindex);
+const clusterPosts = allPosts
+  .filter((p) => p.data.cluster === cluster)
+  .sort((a, b) => a.data.publishedAt.getTime() - b.data.publishedAt.getTime());
+const currentIndex = clusterPosts.findIndex((p) => p.id === slug);
+const prevPost = currentIndex > 0 ? clusterPosts[currentIndex - 1] : undefined;
+const nextPost =
+  currentIndex < clusterPosts.length - 1 ? clusterPosts[currentIndex + 1] : undefined;
+
+const related = getRelatedPosts(post, allPosts);
+const clusterInfo = clusterById.get(cluster!)!;
+
+const { Content, headings } = await renderEntry(post);
+
+const tocItems =
+  headings && headings.length > 0
+    ? headings
+        .filter((h) => h.depth <= 3 && h.depth >= 2)
+        .map((h) => ({
+          id: h.slug,
+          text: h.text,
+          level: h.depth as 2 | 3,
+        }))
+    : extractToc(post.data.body);
+
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: clusterInfo.name, url: clusterUrl(cluster!) },
+  { name: post.data.title, url: articleUrl(cluster!, slug!) },
+];
+
+const jsonLd = [
+  buildArticleJsonLd(post),
+  buildBreadcrumbJsonLd(breadcrumbs),
+];
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  canonical={articleUrl(cluster!, slug!)}
+  ogImage={post.data.heroImage?.url}
+  noindex={post.data.noindex}
+  jsonLd={jsonLd}
+  breadcrumbs={breadcrumbs}
+>
+  <PrNotice />
+
+  <ArticleHeader post={post} />
+
+  <Toc items={tocItems} />
+
+  <div class="prose max-w-none">
+    <Content />
+  </div>
+
+  {
+    post.data.offers.map((offer) => (
+      <OfferButton slug={offer.slug} label={offer.label} context={offer.context} />
+    ))
+  }
+
+  <Firsthand content={post.data.firsthand} />
+
+  <RelatedPosts posts={related} />
+
+  <nav class="mt-10 flex justify-between border-t border-gray-200 pt-6 text-sm">
+    {
+      prevPost ? (
+        <a
+          href={`/c/${cluster}/${prevPost.id}/`}
+          class="text-blue-600 hover:underline"
+        >
+          ← {prevPost.data.title}
+        </a>
+      ) : (
+        <span />
+      )
+    }
+    {
+      nextPost ? (
+        <a
+          href={`/c/${cluster}/${nextPost.id}/`}
+          class="text-blue-600 hover:underline"
+        >
+          {nextPost.data.title} →
+        </a>
+      ) : (
+        <span />
+      )
+    }
+  </nav>
+</BaseLayout>

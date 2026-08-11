@@ -1,0 +1,38 @@
+---
+import { site } from "@/config/site.ts";
+
+type Props = {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown>[];
+};
+
+const { title, description, canonical, ogImage, noindex = false, jsonLd = [] } = Astro.props;
+const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
+const canonicalUrl = canonical ?? Astro.url.href;
+const image = ogImage ?? `${site.url}/og-default.png`;
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl} />
+{noindex && <meta name="robots" content="noindex,nofollow" />}
+
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={image} />
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonicalUrl} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={image} />
+
+{
+  jsonLd.map((ld) => (
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(ld)} />
+  ))
+}

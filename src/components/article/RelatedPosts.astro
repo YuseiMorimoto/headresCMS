@@ -1,0 +1,34 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { clusterById } from "@/config/clusters.ts";
+
+type Props = {
+  posts: CollectionEntry<"posts">[];
+};
+
+const { posts } = Astro.props;
+---
+
+{
+  posts.length > 0 && (
+    <section class="my-10">
+      <h2 class="mb-4 text-2xl font-bold">関連記事</h2>
+      <ul class="grid gap-4 sm:grid-cols-2">
+        {posts.map((post) => (
+          <li class="rounded border border-gray-200 p-4">
+            <a
+              href={`/c/${post.data.cluster}/${post.id}/`}
+              class="font-semibold text-blue-600 no-underline hover:underline"
+            >
+              {post.data.title}
+            </a>
+            <p class="mt-1 text-sm text-gray-600">{post.data.description}</p>
+            <p class="mt-1 text-xs text-gray-400">
+              {clusterById.get(post.data.cluster)?.name}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
