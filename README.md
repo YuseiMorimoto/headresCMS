@@ -48,6 +48,16 @@ npm run gsc-report        # GSCデータ取得（要 GSC_SERVICE_ACCOUNT_JSON）
 npm run generate-draft -- --title "..." --keywords "kw1,kw2" --type review --cluster example-a
 ```
 
+## 公開準備
+
+本番公開前は `docs/07-launch-checklist.md` を参照してください。
+
+```bash
+npm run prelaunch          # 公開前チェック（警告モード）
+npm run prelaunch -- --strict  # ダミーデータ残存で失敗
+npm run sync-links -- --dry-run  # KV同期の検証のみ
+```
+
 ## 仕様
 
 `docs/` フォルダに仕様書を配置。エージェント向けルールは `AGENTS.md` を参照。

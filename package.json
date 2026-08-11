@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "prebuild": "tsx scripts/validate-clusters.ts && tsx scripts/build-redirects.ts",
+    "prebuild": "tsx scripts/validate-clusters.ts && tsx scripts/build-robots.ts && tsx scripts/build-redirects.ts",
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
@@ -17,7 +17,9 @@
     "lint-content": "tsx scripts/lint-content.ts",
     "gsc-report": "tsx scripts/gsc-report.ts",
     "cannibalization": "tsx scripts/cannibalization.ts",
-    "generate-draft": "tsx scripts/generate-draft.ts"
+    "generate-draft": "tsx scripts/generate-draft.ts",
+    "prelaunch": "tsx scripts/prelaunch-check.ts",
+    "verify-content": "tsx scripts/verify-content.ts"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.7.0",

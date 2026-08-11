@@ -2,7 +2,14 @@
 MICROCMS_SERVICE_DOMAIN=your-service.microcms.io
 MICROCMS_API_KEY=your-api-key
 CONTENT_SOURCE=local
-# Preview URL (microCMS):
-# /preview/?id={contentId}&draftKey={draftKey}
 PUBLIC_SITE_URL=https://example.com
 PUBLIC_IMAGE_BASE=https://img.example.com
+
+# Cloudflare (sync-links / deploy)
+# CLOUDFLARE_API_TOKEN=your-token
+# KV_NAMESPACE_ID=your-kv-namespace-id
+
+# Webhook proxy Worker (worker/webhook-proxy)
+# MICROCMS_WEBHOOK_SECRET=your-webhook-secret
+# GITHUB_DISPATCH_TOKEN=ghp_...
+# GITHUB_REPO=owner/repo
