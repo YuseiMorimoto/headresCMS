@@ -1,0 +1,22 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# generated
+public/_redirects
+
+# secrets / local env
+.dev.vars
+.env
+.env.*
+!.dev.vars.example
+
+# wrangler
+.wrangler/
+
+# logs / os
+*.log
+.DS_Store

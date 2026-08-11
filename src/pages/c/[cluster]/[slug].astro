@@ -1,0 +1,33 @@
+---
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ArticleView from "../../../components/article/ArticleView.astro";
+import { getPosts, type Post } from "../../../lib/content";
+import { relatedPosts } from "../../../lib/related";
+import { SITE } from "../../../config/site";
+
+export const getStaticPaths = (async () => {
+  const all = await getPosts();
+  // ピラー記事は /c/{cluster}/ が本体を兼ねるため、ここでは子記事のみを生成する。
+  const children = all.filter((p) => !p.data.isPillar);
+  return children.map((post) => ({
+    params: { cluster: post.data.cluster, slug: post.id },
+    props: { post, all },
+  }));
+}) satisfies GetStaticPaths;
+
+const { post, all } = Astro.props as { post: Post; all: Post[] };
+const canonicalPath = `/c/${post.data.cluster}/${post.id}/`;
+const related = relatedPosts(post, all);
+---
+
+<BaseLayout
+  title={`${post.data.title} | ${SITE.name}`}
+  description={post.data.description}
+  canonicalPath={canonicalPath}
+  noindex={post.data.noindex}
+  ogType="article"
+  ogImage={post.data.heroImage?.url}
+>
+  <ArticleView post={post} canonicalPath={canonicalPath} related={related} />
+</BaseLayout>

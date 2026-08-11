@@ -1,0 +1,11 @@
+{
+  "name": "headresCMS (Astro + Cloudflare Workers)",
+  "install": "if [ -f package-lock.json ]; then npm ci; else echo 'package-lock.json がまだありません。install をスキップします。'; fi",
+  "terminals": [
+    {
+      "name": "astro-dev",
+      "command": "CONTENT_SOURCE=local PUBLIC_SITE_URL=http://localhost:4321 npm run dev"
+    }
+  ],
+  "ports": [4321, 8787]
+}

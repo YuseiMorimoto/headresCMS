@@ -1,0 +1,12 @@
+---
+// 一次情報。見出し付きで独立表示する。空欄はスキーマ（min 50）で弾かれビルドエラーになる。
+interface Props {
+  content: string;
+}
+const { content } = Astro.props;
+---
+
+<section class="my-8 rounded-lg border-l-4 border-emerald-500 bg-emerald-50 p-5">
+  <h2 class="mb-3 text-xl font-bold text-emerald-900">実際に使って分かったこと</h2>
+  <p class="whitespace-pre-line text-gray-800">{content}</p>
+</section>

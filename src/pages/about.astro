@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { SITE } from "../config/site";
+---
+
+<BaseLayout
+  title={`運営者情報 | ${SITE.name}`}
+  description={`${SITE.name}の運営者情報。サイトの方針と編集体制について記載しています。`}
+  canonicalPath="/about/"
+>
+  <h1 class="mb-6 text-2xl font-bold">運営者情報</h1>
+  <p class="mb-4">
+    {SITE.name}は、実際の使用と一次情報にもとづく比較・レビューを提供するアフィリエイトメディアです。
+  </p>
+  <p>運営: {SITE.author}</p>
+</BaseLayout>

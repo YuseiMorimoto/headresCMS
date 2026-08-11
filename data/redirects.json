@@ -1,0 +1,9 @@
+[
+  {
+    "from": "/c/example-a/old-review/",
+    "to": "/c/example-a/example-a-review/",
+    "code": 301,
+    "reason": "記事統合のサンプル",
+    "date": "2026-08-11"
+  }
+]

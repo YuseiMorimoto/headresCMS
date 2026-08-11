@@ -1,0 +1,54 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getPosts } from "../lib/content";
+import { CLUSTERS } from "../config/clusters";
+import { SITE } from "../config/site";
+
+const posts = await getPosts();
+const latest = posts.filter((p) => !p.data.noindex).slice(0, 12);
+---
+
+<BaseLayout
+  title={`${SITE.name} | ${SITE.catch}`}
+  description={`${SITE.name}は${SITE.catch}アフィリエイトメディアです。比較・レビュー・解説記事を掲載しています。`}
+  canonicalPath="/"
+>
+  <h1 class="mb-6 text-2xl font-bold">{SITE.name}</h1>
+
+  <section class="mb-10">
+    <h2 class="mb-3 text-xl font-bold">新着記事</h2>
+    <ul class="space-y-2">
+      {
+        latest.map((post) => (
+          <li>
+            <a
+              href={`/c/${post.data.cluster}/${post.id}/`}
+              class="text-blue-700 hover:underline"
+            >
+              {post.data.title}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="mb-3 text-xl font-bold">カテゴリ一覧</h2>
+    <ul class="space-y-2">
+      {
+        CLUSTERS.map((cluster) => (
+          <li>
+            <a
+              href={`/c/${cluster.id}/`}
+              class="font-semibold text-blue-700 hover:underline"
+            >
+              {cluster.name}
+            </a>
+            <p class="text-sm text-gray-600">{cluster.description}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>

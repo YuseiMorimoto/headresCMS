@@ -1,0 +1,20 @@
+{
+  "name": "affiliate-site",
+  "compatibility_date": "2026-08-01",
+  "main": "./worker/index.ts",
+  "assets": {
+    "directory": "./dist/",
+    "not_found_handling": "404-page",
+    "binding": "ASSETS",
+    "run_worker_first": ["/go/*"]
+  },
+  "kv_namespaces": [
+    // id はデプロイ先の KV 名前空間 ID に置き換える（秘匿値ではない）。
+    // ローカル開発では wrangler が自動でローカル KV を使うため、この id は参照されない。
+    { "binding": "LINKS", "id": "0000000000000000000000000000000a" }
+  ],
+  "analytics_engine_datasets": [
+    { "binding": "CLICKS", "dataset": "AFFILIATE_CLICKS" }
+  ],
+  "observability": { "enabled": true }
+}

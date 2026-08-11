@@ -1,0 +1,7 @@
+# ローカル開発用の環境変数の例。実値を入れて .dev.vars にコピーする（.dev.vars はコミットしない）。
+# microCMS を使わない場合は CONTENT_SOURCE=local で開発できる。
+CONTENT_SOURCE=local
+# MICROCMS_SERVICE_DOMAIN=your-service
+# MICROCMS_API_KEY=your-api-key
+PUBLIC_SITE_URL=http://localhost:4321
+# PUBLIC_IMAGE_BASE=https://img.example.com

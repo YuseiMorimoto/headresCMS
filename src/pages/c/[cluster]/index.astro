@@ -1,0 +1,68 @@
+---
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ArticleView from "../../../components/article/ArticleView.astro";
+import { getPosts, type Post } from "../../../lib/content";
+import { relatedPosts } from "../../../lib/related";
+import { CLUSTERS } from "../../../config/clusters";
+import { SITE } from "../../../config/site";
+
+export const getStaticPaths = (async () => {
+  const all = await getPosts();
+  return CLUSTERS.map((cluster) => {
+    const pillar = all.find(
+      (p) => p.data.cluster === cluster.id && p.data.isPillar,
+    );
+    const children = all.filter(
+      (p) => p.data.cluster === cluster.id && !p.data.isPillar,
+    );
+    return {
+      params: { cluster: cluster.id },
+      props: { cluster, pillar, children, all },
+    };
+  });
+}) satisfies GetStaticPaths;
+
+const { cluster, pillar, children, all } = Astro.props as {
+  cluster: (typeof CLUSTERS)[number];
+  pillar: Post | undefined;
+  children: Post[];
+  all: Post[];
+};
+
+if (!pillar) {
+  throw new Error(`クラスタ "${cluster.id}" にピラー記事がありません。`);
+}
+
+const canonicalPath = `/c/${cluster.id}/`;
+const related = relatedPosts(pillar, all);
+---
+
+<BaseLayout
+  title={`${pillar.data.title} | ${SITE.name}`}
+  description={pillar.data.description}
+  canonicalPath={canonicalPath}
+  noindex={pillar.data.noindex}
+  ogType="article"
+  ogImage={pillar.data.heroImage?.url}
+>
+  <ArticleView post={pillar} canonicalPath={canonicalPath} related={related} />
+
+  <section class="mt-10 border-t border-gray-200 pt-6">
+    <h2 class="mb-3 text-xl font-bold">{cluster.name}の記事一覧</h2>
+    <ul class="space-y-2">
+      {
+        children.map((post) => (
+          <li>
+            <a
+              href={`/c/${cluster.id}/${post.id}/`}
+              class="text-blue-700 hover:underline"
+            >
+              {post.data.title}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>

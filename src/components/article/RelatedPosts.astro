@@ -1,0 +1,33 @@
+---
+import type { Post } from "../../lib/content";
+import { getCluster } from "../../config/clusters";
+
+interface Props {
+  posts: Post[];
+}
+const { posts } = Astro.props;
+
+function href(post: Post): string {
+  return `/c/${post.data.cluster}/${post.id}/`;
+}
+---
+
+{
+  posts.length > 0 && (
+    <section class="my-8">
+      <h2 class="mb-3 text-xl font-bold">関連記事</h2>
+      <ul class="space-y-2">
+        {posts.map((post) => (
+          <li>
+            <a href={href(post)} class="text-blue-700 hover:underline">
+              {post.data.title}
+            </a>
+            <span class="ml-2 text-xs text-gray-500">
+              {getCluster(post.data.cluster)?.name}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

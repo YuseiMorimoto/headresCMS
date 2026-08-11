@@ -1,0 +1,22 @@
+{
+  "offer-a": {
+    "url": "https://example-asp.example/track/offer-a",
+    "asp": "a8",
+    "subIdParam": null,
+    "label": "公式サイトを見る",
+    "active": true,
+    "fallbackPath": "/c/example-a/",
+    "note": "サンプル案件。subIdParam は ASP 管理画面で確認した実名のみ設定する。",
+    "updatedAt": "2026-08-11T00:00:00Z"
+  },
+  "offer-b": {
+    "url": "https://example-asp.example/track/offer-b",
+    "asp": "moshimo",
+    "subIdParam": null,
+    "label": "詳細を見る",
+    "active": false,
+    "fallbackPath": "/c/example-a/",
+    "note": "終了案件のサンプル。active:false のため fallbackPath へ 302 する。",
+    "updatedAt": "2026-08-11T00:00:00Z"
+  }
+}

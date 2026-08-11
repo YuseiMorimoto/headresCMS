@@ -1,0 +1,84 @@
+---
+import type { Post } from "../../lib/content";
+import { getCluster } from "../../config/clusters";
+import { renderBody } from "../../lib/markdown";
+import { articleJsonLd, breadcrumbJsonLd } from "../../lib/schema";
+import { SITE } from "../../config/site";
+import PrNotice from "./PrNotice.astro";
+import OfferButton from "./OfferButton.astro";
+import Firsthand from "./Firsthand.astro";
+import RelatedPosts from "./RelatedPosts.astro";
+
+interface Props {
+  post: Post;
+  canonicalPath: string;
+  related: Post[];
+}
+
+const { post, canonicalPath, related } = Astro.props;
+const cluster = getCluster(post.data.cluster);
+const bodyHtml = renderBody(post.data.body);
+
+const dtf = new Intl.DateTimeFormat("ja-JP", { dateStyle: "medium" });
+const canonical = new URL(canonicalPath, SITE.url).toString();
+
+const crumbs = [
+  { name: "Home", url: new URL("/", SITE.url).toString() },
+  {
+    name: cluster?.name ?? post.data.cluster,
+    url: new URL(`/c/${post.data.cluster}/`, SITE.url).toString(),
+  },
+  { name: post.data.title, url: canonical },
+];
+
+const jsonLd = [articleJsonLd(post, canonical), breadcrumbJsonLd(crumbs)];
+---
+
+<script
+  is:inline
+  type="application/ld+json"
+  set:html={JSON.stringify(jsonLd)}
+  slot="head"
+/>
+
+<article>
+  <nav class="mb-4 text-sm text-gray-500" aria-label="パンくず">
+    <a href="/" class="hover:underline">Home</a>
+    <span class="mx-1">›</span>
+    <a href={`/c/${post.data.cluster}/`} class="hover:underline">
+      {cluster?.name ?? post.data.cluster}
+    </a>
+    <span class="mx-1">›</span>
+    <span>{post.data.title}</span>
+  </nav>
+
+  <PrNotice />
+
+  <h1 class="mb-3 text-2xl font-bold leading-snug">{post.data.title}</h1>
+
+  <p class="mb-6 text-sm text-gray-500">
+    公開: {dtf.format(post.data.publishedAt)} / 更新: {
+      dtf.format(post.data.updatedAt)
+    }
+  </p>
+
+  <div class="prose max-w-none" set:html={bodyHtml} />
+
+  {
+    post.data.offers.length > 0 && (
+      <div class="my-6">
+        {post.data.offers.map((offer) => (
+          <OfferButton
+            slug={offer.slug}
+            label={offer.label}
+            context={offer.context}
+          />
+        ))}
+      </div>
+    )
+  }
+
+  <Firsthand content={post.data.firsthand} />
+
+  <RelatedPosts posts={related} />
+</article>

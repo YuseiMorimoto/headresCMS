@@ -1,0 +1,21 @@
+---
+// 案件リンク。遷移先URLは必ず /go/{slug} を経由する。実URLをHTMLに出力しない。
+interface Props {
+  slug: string;
+  label: string;
+  context?: string;
+}
+const { slug, label, context } = Astro.props;
+---
+
+<div class="my-6 text-center">
+  {context && <p class="mb-2 text-sm text-gray-600">{context}</p>}
+  <a
+    href={`/go/${slug}`}
+    rel="sponsored nofollow noopener"
+    target="_blank"
+    class="inline-block rounded-lg bg-emerald-600 px-6 py-3 font-bold text-white hover:bg-emerald-700"
+  >
+    {label}
+  </a>
+</div>
