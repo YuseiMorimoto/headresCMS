@@ -1,0 +1,54 @@
+name: gsc-report
+on:
+  schedule:
+    # 毎週月曜 06:00 JST = 日曜 21:00 UTC
+    - cron: "0 21 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  gsc-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22.12"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Fetch GSC data and classify
+        run: npm run gsc-report
+        env:
+          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+          PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL || 'https://example.com' }}
+
+      - name: Commit GSC snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/gsc/
+          git diff --staged --quiet || git commit -m "data: add GSC snapshot $(date -u +%Y-%m-%d)"
+          git push
+
+      - name: Create rewrite report issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('gsc-report-issue.md', 'utf8');
+            const date = new Date().toISOString().slice(0, 10);
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[gsc-report] リライト候補レポート ${date}`,
+              body,
+              labels: ['rewrite', 'new-article'],
+            });

@@ -11,8 +11,11 @@ dist/
 .env.*
 .dev.vars
 
-# generated
-public/_redirects
+# generated reports (CI artifacts)
+cannibalization-report.md
+gsc-report-issue.md
+draft-output.txt
+offer-check-results.json
 
 # OS
 .DS_Store

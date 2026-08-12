@@ -28,6 +28,26 @@ microCMS の下書きを確認する SSR ルートです。
 - `noindex` が出力されます（検索エンジンにインデックスされません）
 - microCMS の API キーが `.dev.vars` に設定されている必要があります
 
+## 自動化ワークフロー
+
+| ワークフロー | トリガ | 内容 |
+|---|---|---|
+| `deploy.yml` | push(main) | 本番デプロイ |
+| `linkcheck.yml` | 毎週土曜 03:00 JST | lychee + 案件URL疎通確認 → Issue |
+| `gsc-report.yml` | 毎週月曜 06:00 JST | GSCリライト候補レポート → Issue |
+| `cannibalization.yml` | 毎月1日 06:00 JST | キーワード重複検出 → Issue |
+| `draft.yml` | 手動 | AI下書き生成 → Draft PR |
+| `export.yml` | 毎週日曜 04:00 JST | CMS → Markdown エクスポート |
+
+### ローカル実行
+
+```bash
+npm run check-offers      # 案件URL疎通確認
+npm run cannibalization   # キーワード重複レポート生成
+npm run gsc-report        # GSCデータ取得（要 GSC_SERVICE_ACCOUNT_JSON）
+npm run generate-draft -- --title "..." --keywords "kw1,kw2" --type review --cluster example-a
+```
+
 ## 仕様
 
 `docs/` フォルダに仕様書を配置。エージェント向けルールは `AGENTS.md` を参照。

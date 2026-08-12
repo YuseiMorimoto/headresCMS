@@ -14,13 +14,18 @@
     "sync-links": "tsx scripts/sync-links.ts",
     "check-offers": "tsx scripts/check-offers.ts",
     "export-content": "tsx scripts/export-content.ts",
-    "lint-content": "tsx scripts/lint-content.ts"
+    "lint-content": "tsx scripts/lint-content.ts",
+    "gsc-report": "tsx scripts/gsc-report.ts",
+    "cannibalization": "tsx scripts/cannibalization.ts",
+    "generate-draft": "tsx scripts/generate-draft.ts"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.7.0",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
     "astro": "^6.4.8",
+    "@anthropic-ai/sdk": "^0.57.0",
+    "google-auth-library": "^10.1.0",
     "gray-matter": "^4.0.3",
     "tailwindcss": "^4.1.11",
     "zod": "^3.25.76"
