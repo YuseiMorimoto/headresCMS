@@ -13,21 +13,52 @@ jobs:
       cancel-in-progress: true
     steps:
       - uses: actions/checkout@v5
+
       - uses: actions/setup-node@v5
         with:
           node-version: "22.12"
           cache: npm
+
       - run: npm ci
-      - run: npx astro check
+
+      - name: Lint content
+        run: npm run lint-content
+
+      - name: Astro check
+        run: npx astro check
         env:
-          CONTENT_SOURCE: local
-      - run: npm run build
+          CONTENT_SOURCE: ${{ vars.CONTENT_SOURCE || 'microcms' }}
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+
+      - name: Build
+        run: npm run build
         env:
-          CONTENT_SOURCE: local
+          CONTENT_SOURCE: ${{ vars.CONTENT_SOURCE || 'microcms' }}
           MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
           MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
           PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
           PUBLIC_IMAGE_BASE: ${{ vars.PUBLIC_IMAGE_BASE }}
-      - run: npx wrangler deploy
+
+      - name: Verify content
+        run: npm run verify-content
+        env:
+          PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+          PUBLIC_IMAGE_BASE: ${{ vars.PUBLIC_IMAGE_BASE }}
+
+      - name: Prelaunch check (strict)
+        run: npm run prelaunch -- --strict
+        env:
+          PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+          PUBLIC_IMAGE_BASE: ${{ vars.PUBLIC_IMAGE_BASE }}
+
+      - name: Sync links to KV
+        run: npm run sync-links
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          KV_NAMESPACE_ID: ${{ vars.KV_NAMESPACE_ID }}
+
+      - name: Deploy to Cloudflare
+        run: npx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
