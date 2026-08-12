@@ -65,7 +65,11 @@ const jsonLd = [
 >
   <PrNotice />
 
-  <ArticleHeader post={pillar} />
+  <ArticleHeader
+    title={pillar.data.title}
+    publishedAt={pillar.data.publishedAt}
+    updatedAt={pillar.data.updatedAt}
+  />
 
   <Toc items={tocItems} />
 

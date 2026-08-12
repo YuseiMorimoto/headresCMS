@@ -1,0 +1,108 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PrNotice from "@/components/article/PrNotice.astro";
+import PreviewBanner from "@/components/article/PreviewBanner.astro";
+import Firsthand from "@/components/article/Firsthand.astro";
+import OfferButton from "@/components/article/OfferButton.astro";
+import ArticleHeader from "@/components/article/ArticleHeader.astro";
+import { clusterById } from "@/config/clusters.ts";
+import { site } from "@/config/site.ts";
+import { extractToc, addHeadingIds } from "@/lib/toc.ts";
+import { fetchDraftPost, validatePreviewParams } from "@/lib/microcms-preview.ts";
+import { articleUrl, clusterUrl } from "@/lib/schema.ts";
+
+export const prerender = false;
+
+const contentId = Astro.url.searchParams.get("id");
+const draftKey = Astro.url.searchParams.get("draftKey");
+const paramError = validatePreviewParams(contentId, draftKey);
+
+if (paramError) {
+  return new Response(paramError, { status: 400 });
+}
+
+let post;
+try {
+  post = await fetchDraftPost(contentId!, draftKey!);
+} catch (err) {
+  return new Response(
+    err instanceof Error ? err.message : "プレビューの取得に失敗しました",
+    { status: 500 },
+  );
+}
+
+if (!post) {
+  return Astro.redirect("/404/");
+}
+
+const clusterInfo = clusterById.get(post.cluster);
+const tocItems = extractToc(post.body);
+const bodyHtml = addHeadingIds(post.body);
+
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  ...(clusterInfo
+    ? [
+        { name: clusterInfo.name, url: clusterUrl(post.cluster) },
+        { name: post.title, url: articleUrl(post.cluster, post.id) },
+      ]
+    : [{ name: post.title, url: `/preview/?id=${post.id}` }]),
+];
+---
+
+<BaseLayout
+  title={`[プレビュー] ${post.title}`}
+  description={post.description}
+  canonical={`${site.url}/preview/`}
+  ogImage={post.heroImage?.url}
+  noindex={true}
+  breadcrumbs={breadcrumbs}
+>
+  <PreviewBanner />
+
+  <PrNotice />
+
+  <ArticleHeader
+    title={post.title}
+    publishedAt={post.publishedAt}
+    updatedAt={post.updatedAt}
+  />
+
+  {
+    tocItems.length > 0 && (
+      <nav aria-label="目次" class="my-6 rounded border border-gray-200 bg-gray-50 p-4">
+        <p class="mb-2 font-semibold">目次</p>
+        <ol class="space-y-1 text-sm">
+          {tocItems.map((item) => (
+            <li class={item.level === 3 ? "ml-4" : ""}>
+              <a href={`#${item.id}`} class="text-blue-600 hover:underline">
+                {item.text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    )
+  }
+
+  <div class="prose max-w-none" set:html={bodyHtml} />
+
+  {
+    post.offers.map((offer) => (
+      <OfferButton slug={offer.slug} label={offer.label} context={offer.context} />
+    ))
+  }
+
+  {
+    post.firsthand.length >= 50 ? (
+      <Firsthand content={post.firsthand} />
+    ) : (
+      <section class="my-10 rounded-lg border border-amber-300 bg-amber-50 p-6">
+        <h2 class="mb-2 text-xl font-bold text-amber-900">一次情報（未入力）</h2>
+        <p class="text-amber-800">
+          firsthand フィールドが未入力または50文字未満です。公開前に必ず記入してください。
+        </p>
+      </section>
+    )
+  }
+</BaseLayout>

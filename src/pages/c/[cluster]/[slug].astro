@@ -79,7 +79,11 @@ const jsonLd = [
 >
   <PrNotice />
 
-  <ArticleHeader post={post} />
+  <ArticleHeader
+    title={post.data.title}
+    publishedAt={post.data.publishedAt}
+    updatedAt={post.data.updatedAt}
+  />
 
   <Toc items={tocItems} />
 

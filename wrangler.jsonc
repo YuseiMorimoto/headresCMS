@@ -1,15 +1,14 @@
 {
   "name": "affiliate-site",
   "compatibility_date": "2026-08-01",
-  "main": "./worker/index.ts",
   "assets": {
-    "directory": "./dist/",
+    "directory": "./dist/client",
     "not_found_handling": "404-page",
-    "binding": "ASSETS",
-    "run_worker_first": ["/go/*"]
+    "binding": "ASSETS"
   },
   "kv_namespaces": [
-    { "binding": "LINKS", "id": "<KV_NAMESPACE_ID>" }
+    { "binding": "LINKS", "id": "<KV_NAMESPACE_ID>" },
+    { "binding": "SESSION", "id": "<SESSION_KV_NAMESPACE_ID>" }
   ],
   "analytics_engine_datasets": [
     { "binding": "CLICKS", "dataset": "AFFILIATE_CLICKS" }
