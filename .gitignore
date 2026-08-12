@@ -1,0 +1,20 @@
+# dependencies
+node_modules/
+
+# build
+dist/
+.astro/
+
+# env
+.env
+.env.*
+.dev.vars
+
+# generated
+public/_redirects
+
+# OS
+.DS_Store
+
+# logs
+*.log

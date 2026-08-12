@@ -1,0 +1,53 @@
+---
+type Row = {
+  name: string;
+  cells: string[];
+  offerSlug?: string;
+  offerLabel?: string;
+};
+
+type Props = {
+  headers: string[];
+  rows: Row[];
+};
+
+const { headers, rows } = Astro.props;
+---
+
+<div class="my-6 overflow-x-auto">
+  <table class="min-w-full border-collapse text-sm">
+    <thead>
+      <tr>
+        {headers.map((h) => (
+          <th class="border border-gray-300 bg-gray-100 px-3 py-2 text-left font-semibold">
+            {h}
+          </th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {
+        rows.map((row) => (
+          <tr>
+            <td class="border border-gray-300 px-3 py-2 font-medium">{row.name}</td>
+            {row.cells.map((cell) => (
+              <td class="border border-gray-300 px-3 py-2">{cell}</td>
+            ))}
+            {row.offerSlug && (
+              <td class="border border-gray-300 px-3 py-2">
+                <a
+                  href={`/go/${row.offerSlug}`}
+                  rel="sponsored nofollow noopener"
+                  target="_blank"
+                  class="text-blue-600 hover:underline"
+                >
+                  {row.offerLabel ?? "詳細"}
+                </a>
+              </td>
+            )}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>

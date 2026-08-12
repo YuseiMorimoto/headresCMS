@@ -1,0 +1,30 @@
+---
+type TocItem = {
+  id: string;
+  text: string;
+  level: 2 | 3;
+};
+
+type Props = {
+  items: TocItem[];
+};
+
+const { items } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <nav aria-label="目次" class="my-6 rounded border border-gray-200 bg-gray-50 p-4">
+      <p class="mb-2 font-semibold">目次</p>
+      <ol class="space-y-1 text-sm">
+        {items.map((item) => (
+          <li class={item.level === 3 ? "ml-4" : ""}>
+            <a href={`#${item.id}`} class="text-blue-600 hover:underline">
+              {item.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}

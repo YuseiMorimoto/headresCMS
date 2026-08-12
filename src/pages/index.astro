@@ -1,0 +1,55 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PostCard from "@/components/ui/PostCard.astro";
+import { CLUSTERS } from "@/config/clusters.ts";
+import { site } from "@/config/site.ts";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("posts", ({ data }) => !data.noindex))
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+
+const latest = posts.slice(0, 12);
+const sortedClusters = [...CLUSTERS].sort((a, b) => a.order - b.order);
+---
+
+<BaseLayout
+  title={`${site.name} | ${site.catchphrase}`}
+  description={`${site.name}は比較・レビュー記事で商品やサービス選びをサポートするメディアです。`}
+  canonical={site.url}
+>
+  <section class="mb-12">
+    <h1 class="mb-4 text-3xl font-bold">{site.name}</h1>
+    <p class="text-lg text-gray-600">{site.catchphrase}</p>
+  </section>
+
+  <section class="mb-12">
+    <h2 class="mb-6 text-2xl font-bold">新着記事</h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {latest.map((post) => <PostCard post={post} />)}
+    </div>
+    {
+      posts.length > 12 && (
+        <p class="mt-6">
+          <a href="/page/2/" class="text-blue-600 hover:underline">もっと見る →</a>
+        </p>
+      )
+    }
+  </section>
+
+  <section>
+    <h2 class="mb-6 text-2xl font-bold">トピッククラスタ</h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {
+        sortedClusters.map((cluster) => (
+          <a
+            href={`/c/${cluster.id}/`}
+            class="block rounded border border-gray-200 p-4 no-underline hover:border-blue-300"
+          >
+            <h3 class="font-semibold text-gray-900">{cluster.name}</h3>
+            <p class="mt-2 text-sm text-gray-600">{cluster.description}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

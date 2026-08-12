@@ -1,0 +1,6 @@
+# Copy to .dev.vars and fill in values. Never commit .dev.vars.
+MICROCMS_SERVICE_DOMAIN=your-service.microcms.io
+MICROCMS_API_KEY=your-api-key
+CONTENT_SOURCE=local
+PUBLIC_SITE_URL=https://example.com
+PUBLIC_IMAGE_BASE=https://img.example.com

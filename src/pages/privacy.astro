@@ -1,0 +1,19 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { site } from "@/config/site.ts";
+---
+
+<BaseLayout
+  title="プライバシーポリシー"
+  description={`${site.name}のプライバシーポリシーです。`}
+  canonical={`${site.url}/privacy/`}
+>
+  <h1 class="mb-6 text-3xl font-bold">プライバシーポリシー</h1>
+  <div class="prose max-w-none">
+    <p>当サイトでは、サービス向上のためアクセス解析を行う場合があります。</p>
+    <p>
+      お問い合わせフォームは Google フォームを使用しており、入力情報は Google
+      のサーバーに保存されます。
+    </p>
+  </div>
+</BaseLayout>
