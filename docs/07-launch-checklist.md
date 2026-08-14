@@ -12,6 +12,14 @@
 - [ ] **提携 ASP と案件リスト**を `data/links.json` に投入する（ダミー URL を実案件に差し替え）
 - [ ] `src/config/site.ts` のサイト名・著者情報・Googleフォーム URL を本番値に更新する
 
+## ドメイン
+
+本番ドメインは **`toinoba.com`**（Cloudflare Registrar で取得済み）。
+
+- 既定値の定義元は `src/config/domain.ts`。ここを変えれば Astro・スクリプト・CI の全てに伝播する
+- `PUBLIC_SITE_URL` / `PUBLIC_IMAGE_BASE` は**未設定でよい**。ステージング等で切り替えたいときだけ GitHub Variables に設定する
+- Worker は `wrangler.jsonc` の `routes` で `toinoba.com` にカスタムドメインとして紐づく。Cloudflare 上にゾーンが存在している必要がある
+
 ## Cloudflare インフラ
 
 ### Workers + KV
@@ -33,9 +41,9 @@ CLOUDFLARE_API_TOKEN=xxx KV_NAMESPACE_ID=xxx npm run sync-links
 
 ### R2（画像ストレージ）
 
-1. R2 バケットを作成する（例: `affiliate-site-images`）
-2. カスタムドメインまたは R2.dev 公開 URL を設定する
-3. GitHub Variables に `PUBLIC_IMAGE_BASE` を設定する（例: `https://img.example.com`）
+1. R2 バケットを作成する（例: `toinoba-images`）
+2. カスタムドメイン `img.toinoba.com` を割り当てる（`src/config/domain.ts` の既定値と一致させる）
+3. 別ドメインにする場合のみ GitHub Variables に `PUBLIC_IMAGE_BASE` を設定する
 4. `astro.config.mjs` の `image.remotePatterns` がこのドメインを許可していることを確認
 
 > 画像のアップロードは R2 ダッシュボードまたは別ツールで行う。microCMS には R2 の URL のみ保存する。

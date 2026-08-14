@@ -2,6 +2,7 @@ import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { JWT } from "google-auth-library";
 import { loadLocalPosts } from "./lib/load-posts.ts";
+import { PRODUCTION_SITE_URL, resolveUrl } from "../src/config/domain.ts";
 
 type GscRow = {
   keys: string[];
@@ -32,7 +33,7 @@ type GscSnapshot = {
 };
 
 const GSC_DIR = join(process.cwd(), "data/gsc");
-const SITE_URL = process.env.PUBLIC_SITE_URL ?? "https://example.com";
+const SITE_URL = resolveUrl(process.env.PUBLIC_SITE_URL, PRODUCTION_SITE_URL);
 
 function formatDate(d: Date): string {
   return d.toISOString().slice(0, 10);

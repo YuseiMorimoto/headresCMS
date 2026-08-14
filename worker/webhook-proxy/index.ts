@@ -61,7 +61,7 @@ export default {
         Authorization: `Bearer ${env.GITHUB_DISPATCH_TOKEN}`,
         Accept: "application/vnd.github+json",
         "Content-Type": "application/json",
-        "User-Agent": "affiliate-site-webhook-proxy",
+        "User-Agent": "toinoba-webhook-proxy",
       },
       body: JSON.stringify({ event_type: "content-published" }),
     });

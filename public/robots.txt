@@ -3,4 +3,4 @@ Allow: /
 Disallow: /go/
 Disallow: /preview/
 
-Sitemap: https://example.com/sitemap-index.xml
+Sitemap: https://toinoba.com/sitemap-index.xml

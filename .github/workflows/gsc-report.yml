@@ -28,7 +28,7 @@ jobs:
         run: npm run gsc-report
         env:
           GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
-          PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL || 'https://example.com' }}
+          PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
 
       - name: Commit GSC snapshot
         run: |

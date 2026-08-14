@@ -1,12 +1,18 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import matter from "gray-matter";
+import {
+  PRODUCTION_IMAGE_BASE,
+  PRODUCTION_SITE_URL,
+  resolveUrl,
+} from "../src/config/domain.ts";
 
 const POSTS_DIR = join(process.cwd(), "content/posts");
 const LINKS_PATH = join(process.cwd(), "data/links.json");
 const DIST_DIR = join(process.cwd(), "dist/client");
 
-const IMAGE_BASE = (process.env.PUBLIC_IMAGE_BASE ?? "https://img.example.com").replace(/\/$/, "");
+const IMAGE_BASE = resolveUrl(process.env.PUBLIC_IMAGE_BASE, PRODUCTION_IMAGE_BASE);
+const SITE_URL = resolveUrl(process.env.PUBLIC_SITE_URL, PRODUCTION_SITE_URL);
 
 const AFFILIATE_HOST_PATTERNS = [
   /a8\.net/i,
@@ -56,7 +62,7 @@ function loadOfferSlugs(): Set<string> {
 function isAllowedUrl(url: string): boolean {
   if (url.startsWith("/")) return true;
   if (url.startsWith(IMAGE_BASE)) return true;
-  if (url.startsWith("https://example.com")) return true;
+  if (url.startsWith(SITE_URL)) return true;
   return false;
 }
 
