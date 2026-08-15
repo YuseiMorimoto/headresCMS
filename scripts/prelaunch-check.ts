@@ -7,6 +7,7 @@ import {
   PRODUCTION_SITE_URL,
   resolveUrl,
 } from "../src/config/domain.ts";
+import { isIndexable } from "../src/config/launch.ts";
 import { verifyBuiltHtml, verifyMarkdownContent } from "./verify-content.ts";
 
 const strict = process.argv.includes("--strict");
@@ -97,13 +98,38 @@ function checkEnv(): void {
 function checkRobots(): void {
   const robots = readFileSync(join(process.cwd(), "public/robots.txt"), "utf-8");
   const siteUrl = resolveUrl(process.env.PUBLIC_SITE_URL, PRODUCTION_SITE_URL);
+  const indexable = isIndexable(process.env.PUBLIC_INDEXABLE);
+
+  if (!indexable) {
+    // 公開前は全面禁止が出ていることを確認する。
+    // 誤って公開状態の robots.txt が混ざっていたら止める。
+    const ok = /^Disallow: \/$/m.test(robots) && !robots.includes("Sitemap:");
+    check(
+      "robots.txt",
+      ok,
+      ok
+        ? "非公開モード: Disallow: / （公開時は PUBLIC_INDEXABLE=true）"
+        : "非公開モードのはずが robots.txt がクロールを許可しています",
+    );
+    return;
+  }
 
   const ok =
     robots.includes("Disallow: /go/") &&
     robots.includes("Disallow: /preview/") &&
     robots.includes(`Sitemap: ${siteUrl}/sitemap-index.xml`);
 
-  check("robots.txt", ok, ok ? "設定OK" : "Sitemap URL または Disallow が不正です");
+  check("robots.txt", ok, ok ? "公開モード: 設定OK" : "Sitemap URL または Disallow が不正です");
+}
+
+/** 公開状態は取り違えると影響が大きいため、独立した項目として明示する */
+function checkIndexability(): void {
+  const indexable = isIndexable(process.env.PUBLIC_INDEXABLE);
+  check(
+    "検索エンジンへの公開",
+    true,
+    indexable ? "公開（インデックス許可）" : "非公開（noindex + クロール禁止）",
+  );
 }
 
 function main() {
@@ -111,6 +137,7 @@ function main() {
 
   checkPhase0();
   checkEnv();
+  checkIndexability();
   checkRobots();
 
   const mdErrors = verifyMarkdownContent();

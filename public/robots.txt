@@ -1,6 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /go/
-Disallow: /preview/
-
-Sitemap: https://toinoba.com/sitemap-index.xml

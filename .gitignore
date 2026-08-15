@@ -11,8 +11,11 @@ dist/
 .env.*
 .dev.vars
 
-# generated at build time (master: data/redirects.json)
+# generated at build time by prebuild scripts
+# _redirects: master is data/redirects.json
+# robots.txt: content depends on PUBLIC_INDEXABLE, so a committed copy misleads
 public/_redirects
+public/robots.txt
 
 # generated reports (CI artifacts)
 cannibalization-report.md
