@@ -146,4 +146,9 @@ function main() {
   console.log("✓ コンテンツ検証: 問題なし");
 }
 
-main();
+// prelaunch-check.ts が検証関数を import するため、直接実行時のみ main を走らせる。
+// これがないと import 時の process.exit(1) で品質ゲートが途中終了し、
+// 残りの診断結果が失われる。
+if (process.argv[1]?.endsWith("verify-content.ts")) {
+  main();
+}
