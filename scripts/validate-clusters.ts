@@ -1,14 +1,9 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import matter from "gray-matter";
+import { CLUSTERS } from "../src/config/clusters.ts";
 
 const POSTS_DIR = join(process.cwd(), "content/posts");
-
-const CLUSTERS = [
-  { id: "example-a", pillarSlug: "example-a-pillar" },
-  { id: "example-b", pillarSlug: "example-b-pillar" },
-  { id: "example-c", pillarSlug: "example-c-pillar" },
-];
 
 function collectMarkdownFiles(dir: string): string[] {
   const files: string[] = [];
@@ -52,15 +47,27 @@ function main() {
     }
   }
 
+  // ピラー不在のクラスタを通すと、クラスタページが 0 バイトで生成され
+  // sitemap にも載る（ビルドは成功扱いになる）。ここで必ず止める。
   for (const cluster of CLUSTERS) {
     const pillars = posts.filter((p) => p.cluster === cluster.id && p.isPillar);
-    if (pillars.length !== 1) {
+    if (pillars.length === 0) {
       throw new Error(
-        `クラスタ "${cluster.id}" のピラー記事は1件である必要があります（現在: ${pillars.length}件）`,
+        `クラスタ "${cluster.id}" にピラー記事がありません。` +
+          `id: "${cluster.pillarSlug}" の記事を作成するか、クラスタ定義から外してください`,
+      );
+    }
+    if (pillars.length > 1) {
+      throw new Error(
+        `クラスタ "${cluster.id}" のピラー記事が ${pillars.length} 件あります（1件にしてください）: ` +
+          pillars.map((p) => p.id).join(", "),
       );
     }
     if (pillars[0]!.id !== cluster.pillarSlug) {
-      throw new Error(`クラスタ "${cluster.id}" のピラー記事 id が pillarSlug と一致しません`);
+      throw new Error(
+        `クラスタ "${cluster.id}" のピラー記事 id が pillarSlug と一致しません` +
+          `（定義: "${cluster.pillarSlug}" / 実際: "${pillars[0]!.id}"）`,
+      );
     }
   }
 
