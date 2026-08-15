@@ -27,8 +27,15 @@
 1. Cloudflare ダッシュボードで KV namespace を作成する
    - `LINKS` — 案件定義用
    - `SESSION` — Astro セッション用（アダプタが自動利用）
-2. `wrangler.jsonc` のプレースホルダ ID を実際の ID に差し替える
-3. 案件データを同期する:
+2. GitHub Variables に ID を設定する
+   - `KV_NAMESPACE_ID` — `LINKS` の ID
+   - `SESSION_KV_NAMESPACE_ID` — `SESSION` の ID（省略時は `LINKS` と同じ ID を流用）
+
+   `wrangler.jsonc` はプレースホルダのままコミットしておく。CI が**ビルド前に**実 ID へ置換する。
+   `wrangler deploy` が読むのはビルド生成物の `dist/server/wrangler.json` なので、
+   ビルド後に置換しても反映されない（この順序を崩さないこと）。
+   ID が未解決のままデプロイに進んだ場合は `Verify deploy config is resolved` で失敗する。
+3. ローカルから案件データを同期する場合:
 
 ```bash
 CLOUDFLARE_API_TOKEN=xxx KV_NAMESPACE_ID=xxx npm run sync-links
