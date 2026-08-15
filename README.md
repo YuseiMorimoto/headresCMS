@@ -32,7 +32,8 @@ microCMS の下書きを確認する SSR ルートです。
 
 | ワークフロー | トリガ | 内容 |
 |---|---|---|
-| `deploy.yml` | push(main) | 本番デプロイ |
+| `deploy.yml` | push(main) / content-published | 本番デプロイ |
+| `deploy-webhook-proxy.yml` | push(main, webhook-proxy 変更) / 手動 | microCMS Webhook プロキシ Worker デプロイ |
 | `linkcheck.yml` | 毎週土曜 03:00 JST | lychee + 案件URL疎通確認 → Issue |
 | `gsc-report.yml` | 毎週月曜 06:00 JST | GSCリライト候補レポート → Issue |
 | `cannibalization.yml` | 毎月1日 06:00 JST | キーワード重複検出 → Issue |
