@@ -3,6 +3,9 @@ import { PRODUCTION_IMAGE_BASE, PRODUCTION_SITE_URL, resolveUrl } from "./domain
 const url = resolveUrl(import.meta.env.PUBLIC_SITE_URL, PRODUCTION_SITE_URL);
 const imageBase = resolveUrl(import.meta.env.PUBLIC_IMAGE_BASE, PRODUCTION_IMAGE_BASE);
 
+/** 一覧ページと sitemap のページ数計算で共有する（値の乖離を防ぐ） */
+export const POSTS_PER_PAGE = 20;
+
 export const site = {
   name: "問いの場",
   catchphrase: "答えではなく、問いを。",
