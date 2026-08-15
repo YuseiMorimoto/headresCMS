@@ -1,7 +1,6 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import cloudflare from "@astrojs/cloudflare";
-import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { PRODUCTION_IMAGE_BASE, PRODUCTION_SITE_URL, resolveUrl } from "./src/config/domain.ts";
 
@@ -19,15 +18,6 @@ export default defineConfig({
   build: {
     format: "directory",
   },
-  integrations: [
-    sitemap({
-      filter: (page) => {
-        if (page.includes("/preview/")) return false;
-        if (page.includes("/contact/")) return false;
-        return true;
-      },
-    }),
-  ],
   vite: {
     plugins: [tailwindcss()],
   },

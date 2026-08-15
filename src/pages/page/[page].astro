@@ -1,12 +1,12 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PostCard from "@/components/ui/PostCard.astro";
-import { site } from "@/config/site.ts";
+import { site, POSTS_PER_PAGE } from "@/config/site.ts";
 import type { GetStaticPaths } from "astro";
 import { getCollection } from "astro:content";
 
 export const getStaticPaths = (async () => {
-  const pageSize = 20;
+  const pageSize = POSTS_PER_PAGE;
   const posts = (await getCollection("posts", ({ data }) => !data.noindex)).sort(
     (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
   );

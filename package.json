@@ -25,7 +25,6 @@
     "@anthropic-ai/sdk": "^0.57.0",
     "@astrojs/cloudflare": "^13.7.0",
     "@astrojs/rss": "^4.0.19",
-    "@astrojs/sitemap": "^3.7.3",
     "astro": "^6.4.8",
     "google-auth-library": "^10.1.0",
     "gray-matter": "^4.0.3",

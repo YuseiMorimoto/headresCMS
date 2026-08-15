@@ -11,6 +11,9 @@ dist/
 .env.*
 .dev.vars
 
+# generated at build time (master: data/redirects.json)
+public/_redirects
+
 # generated reports (CI artifacts)
 cannibalization-report.md
 gsc-report-issue.md
