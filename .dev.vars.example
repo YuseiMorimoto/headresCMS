@@ -8,6 +8,10 @@ CONTENT_SOURCE=local
 # PUBLIC_SITE_URL=https://toinoba.com
 # PUBLIC_IMAGE_BASE=https://img.toinoba.com
 
+# true にするまで全ページ noindex + robots.txt で全面クロール禁止。
+# 公開準備が終わってから設定する（docs/07-launch-checklist.md）。
+# PUBLIC_INDEXABLE=true
+
 # Cloudflare (sync-links / deploy)
 # CLOUDFLARE_API_TOKEN=your-token
 # KV_NAMESPACE_ID=your-kv-namespace-id

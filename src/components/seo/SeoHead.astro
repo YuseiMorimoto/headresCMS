@@ -1,5 +1,6 @@
 ---
 import { site } from "@/config/site.ts";
+import { isIndexable } from "@/config/launch.ts";
 
 type Props = {
   title: string;
@@ -14,12 +15,15 @@ const { title, description, canonical, ogImage, noindex = false, jsonLd = [] } =
 const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
 const canonicalUrl = canonical ?? Astro.url.href;
 const image = ogImage ?? `${site.url}/og-default.png`;
+// 公開前は全ページを noindex にする。robots.txt だけでは
+// 既に発見済みのURLのインデックスを防げないため二重に掛ける。
+const suppressIndex = noindex || !isIndexable(import.meta.env.PUBLIC_INDEXABLE);
 ---
 
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalUrl} />
-{noindex && <meta name="robots" content="noindex,nofollow" />}
+{suppressIndex && <meta name="robots" content="noindex,nofollow" />}
 
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />

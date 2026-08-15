@@ -1,6 +1,4 @@
+# 公開前のためクロールを禁止しています。
+# 公開する際は PUBLIC_INDEXABLE=true を設定してください。
 User-agent: *
-Allow: /
-Disallow: /go/
-Disallow: /preview/
-
-Sitemap: https://toinoba.com/sitemap-index.xml
+Disallow: /

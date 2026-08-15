@@ -12,6 +12,21 @@
 - [ ] **提携 ASP と案件リスト**を `data/links.json` に投入する（ダミー URL を実案件に差し替え）
 - [ ] `src/config/site.ts` のサイト名・著者情報・Googleフォーム URL を本番値に更新する
 
+## 公開スイッチ（最後に入れる）
+
+`PUBLIC_INDEXABLE` が `true` でない限り、サイトは**検索エンジンに公開されない**。
+
+| 状態 | robots.txt | 全ページの meta robots |
+|---|---|---|
+| 既定（未設定） | `Disallow: /` | `noindex,nofollow` |
+| `PUBLIC_INDEXABLE=true` | `Allow: /` + Sitemap | 出力しない（`/contact/` `/404` を除く） |
+
+デプロイ自体は既定のままでも成功する。Phase 0（クラスタ・記事・案件）が未確定のうちに
+インデックスされると、新規ドメインにダミー内容が登録されて回復に時間がかかるため、
+**本チェックリストを全て満たしてから最後に** GitHub Variables へ `PUBLIC_INDEXABLE=true` を設定する。
+
+公開後は `npm run prelaunch` の「検索エンジンへの公開」項目で状態を確認できる。
+
 ## ドメイン
 
 本番ドメインは **`toinoba.com`**（Cloudflare Registrar で取得済み）。
