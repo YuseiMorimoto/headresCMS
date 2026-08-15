@@ -22,20 +22,22 @@
     "verify-content": "tsx scripts/verify-content.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.57.0",
     "@astrojs/cloudflare": "^13.7.0",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
     "astro": "^6.4.8",
-    "@anthropic-ai/sdk": "^0.57.0",
     "google-auth-library": "^10.1.0",
     "gray-matter": "^4.0.3",
     "tailwindcss": "^4.1.11",
+    "turndown": "^7.2.4",
     "zod": "^3.25.76"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@cloudflare/workers-types": "^5.20260811.1",
     "@tailwindcss/vite": "^4.1.11",
+    "@types/turndown": "^5.0.6",
     "tsx": "^4.20.3",
     "typescript": "^5.9.2",
     "wrangler": "^4.120.1"
