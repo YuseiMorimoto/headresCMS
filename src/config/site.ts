@@ -1,3 +1,4 @@
+import { PR_NOTICE } from "./brand.ts";
 import { PRODUCTION_IMAGE_BASE, PRODUCTION_SITE_URL, resolveUrl } from "./domain.ts";
 
 const url = resolveUrl(import.meta.env.PUBLIC_SITE_URL, PRODUCTION_SITE_URL);
@@ -17,5 +18,5 @@ export const site = {
   },
   contactFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLSf_example/viewform?embedded=true",
   contactFormDirectUrl: "https://docs.google.com/forms/d/e/1FAIpQLSf_example/viewform",
-  prNotice: "※本記事にはアフィリエイトリンクを含みます",
+  prNotice: PR_NOTICE,
 } as const;

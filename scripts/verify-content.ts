@@ -1,6 +1,7 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import matter from "gray-matter";
+import { PR_NOTICE } from "../src/config/brand.ts";
 import {
   PRODUCTION_IMAGE_BASE,
   PRODUCTION_SITE_URL,
@@ -102,7 +103,7 @@ export function verifyMarkdownContent(): string[] {
 
 export function verifyBuiltHtml(): string[] {
   const errors: string[] = [];
-  const prNotice = "※本記事にはアフィリエイトリンクを含みます";
+  const prNotice = PR_NOTICE;
   const articlePages = collectHtmlFiles(join(DIST_DIR, "c"));
 
   for (const file of articlePages) {
