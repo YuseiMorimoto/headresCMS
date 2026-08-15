@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { SITE_MISSION } from "@/config/brand.ts";
 import { site } from "@/config/site.ts";
 ---
 
@@ -10,9 +11,7 @@ import { site } from "@/config/site.ts";
 >
   <h1 class="mb-6 text-3xl font-bold">運営者情報</h1>
   <div class="prose max-w-none">
-    <p>
-      当サイトは商品・サービスの比較・レビューを通じて、読者の意思決定をサポートすることを目的としています。
-    </p>
+    <p>{SITE_MISSION}</p>
     <p>運営者: {site.author.name}</p>
   </div>
 </BaseLayout>
