@@ -26,6 +26,15 @@ jobs:
 
       - run: npm ci
 
+      # wrangler deploy が読むのはビルドが生成する dist/server/wrangler.json であり、
+      # そこへ wrangler.jsonc の内容が焼き込まれる。ビルド後に書き換えても反映されない。
+      - name: Configure wrangler KV IDs
+        if: vars.KV_NAMESPACE_ID != ''
+        run: |
+          sed -i "s/<KV_NAMESPACE_ID>/${{ vars.KV_NAMESPACE_ID }}/g" wrangler.jsonc
+          SESSION_ID="${{ vars.SESSION_KV_NAMESPACE_ID || vars.KV_NAMESPACE_ID }}"
+          sed -i "s/<SESSION_KV_NAMESPACE_ID>/${SESSION_ID}/g" wrangler.jsonc
+
       - name: Lint content
         run: npm run lint-content
 
@@ -52,18 +61,21 @@ jobs:
         if: vars.LAUNCH_STRICT != 'true'
         run: npm run prelaunch
 
-      - name: Configure wrangler KV IDs
-        if: vars.KV_NAMESPACE_ID != ''
-        run: |
-          sed -i 's/<KV_NAMESPACE_ID>/${{ vars.KV_NAMESPACE_ID }}/g' wrangler.jsonc
-          SESSION_ID="${{ vars.SESSION_KV_NAMESPACE_ID || vars.KV_NAMESPACE_ID }}"
-          sed -i "s/<SESSION_KV_NAMESPACE_ID>/${SESSION_ID}/g" wrangler.jsonc
-
       - name: Sync links to KV
         run: npm run sync-links
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           KV_NAMESPACE_ID: ${{ vars.KV_NAMESPACE_ID }}
+
+      # プレースホルダのまま進むと Cloudflare 側の難解なエラーになるため、
+      # 設定漏れを名指しで落とす
+      - name: Verify deploy config is resolved
+        run: |
+          if rg -q '<KV_NAMESPACE_ID>|<SESSION_KV_NAMESPACE_ID>' dist/server/wrangler.json; then
+            echo "::error::KV namespace ID が未解決です。GitHub Variables に KV_NAMESPACE_ID（必要なら SESSION_KV_NAMESPACE_ID）を設定してください"
+            exit 1
+          fi
+          echo "KV namespace ID は解決済み"
 
       - name: Deploy to Cloudflare
         run: npx wrangler deploy
