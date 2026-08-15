@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PostCard from "@/components/ui/PostCard.astro";
+import { SITE_DESCRIPTION } from "@/config/brand.ts";
 import { CLUSTERS } from "@/config/clusters.ts";
 import { site } from "@/config/site.ts";
 import { getCollection } from "astro:content";
@@ -14,12 +15,13 @@ const sortedClusters = [...CLUSTERS].sort((a, b) => a.order - b.order);
 
 <BaseLayout
   title={`${site.name} | ${site.catchphrase}`}
-  description={`${site.name}は比較・レビュー記事で商品やサービス選びをサポートするメディアです。`}
+  description={SITE_DESCRIPTION}
   canonical={site.url}
 >
   <section class="mb-12">
     <h1 class="mb-4 text-3xl font-bold">{site.name}</h1>
     <p class="text-lg text-gray-600">{site.catchphrase}</p>
+    <p class="mt-4 text-gray-600">{SITE_DESCRIPTION}</p>
   </section>
 
   <section class="mb-12">

@@ -1,0 +1,61 @@
+name: deploy-webhook-proxy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "worker/webhook-proxy/**"
+      - ".github/workflows/deploy-webhook-proxy.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-webhook-proxy
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22.12"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Verify Cloudflare credentials
+        run: |
+          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
+            echo "::error::CLOUDFLARE_API_TOKEN が未設定です。GitHub Secrets に Cloudflare API トークンを設定してください（docs/07-launch-checklist.md § GitHub 設定）"
+            exit 1
+          fi
+          echo "CLOUDFLARE_API_TOKEN は設定済み"
+
+      - name: Warn missing webhook secrets
+        run: |
+          if [ -z "${{ secrets.MICROCMS_WEBHOOK_SECRET }}" ]; then
+            echo "::warning::MICROCMS_WEBHOOK_SECRET が未設定です。Worker はデプロイされますが、署名検証は失敗します"
+          fi
+          if [ -z "${{ secrets.GITHUB_DISPATCH_TOKEN }}" ]; then
+            echo "::warning::GITHUB_DISPATCH_TOKEN が未設定です。Worker はデプロイされますが、repository_dispatch は送信できません"
+          fi
+
+      - name: Sync Worker secrets
+        if: secrets.MICROCMS_WEBHOOK_SECRET != '' && secrets.GITHUB_DISPATCH_TOKEN != ''
+        working-directory: worker/webhook-proxy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          MICROCMS_WEBHOOK_SECRET: ${{ secrets.MICROCMS_WEBHOOK_SECRET }}
+          GITHUB_DISPATCH_TOKEN: ${{ secrets.GITHUB_DISPATCH_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+        run: |
+          printf '%s' "$MICROCMS_WEBHOOK_SECRET" | npx wrangler secret put MICROCMS_WEBHOOK_SECRET
+          printf '%s' "$GITHUB_DISPATCH_TOKEN" | npx wrangler secret put GITHUB_DISPATCH_TOKEN
+          printf '%s' "$GITHUB_REPO" | npx wrangler secret put GITHUB_REPO
+
+      - name: Deploy webhook proxy Worker
+        working-directory: worker/webhook-proxy
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

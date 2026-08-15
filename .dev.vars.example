@@ -17,6 +17,7 @@ CONTENT_SOURCE=local
 # KV_NAMESPACE_ID=your-kv-namespace-id
 
 # Webhook proxy Worker (worker/webhook-proxy)
+# CI では GITHUB_REPO は github.repository から自動設定される
 # MICROCMS_WEBHOOK_SECRET=your-webhook-secret
 # GITHUB_DISPATCH_TOKEN=ghp_...
-# GITHUB_REPO=owner/repo
+# GITHUB_REPO=owner/repo  # ローカル手動デプロイ時のみ

@@ -50,6 +50,7 @@ Phase 0（クラスタ・記事・案件）が未確定のままインデック�
 | ワークフロー | トリガ | 内容 |
 |---|---|---|
 | `deploy.yml` | push(main) / content-published | 本番デプロイ |
+| `deploy-webhook-proxy.yml` | push(main, webhook-proxy 変更) / 手動 | microCMS Webhook プロキシ Worker デプロイ |
 | `linkcheck.yml` | 毎週土曜 03:00 JST | lychee + 案件URL疎通確認 → Issue |
 | `gsc-report.yml` | 毎週月曜 06:00 JST | GSCリライト候補レポート → Issue |
 | `cannibalization.yml` | 毎月1日 06:00 JST | キーワード重複検出 → Issue |
@@ -101,6 +102,8 @@ npm run sync-links -- --dry-run  # KV同期の検証のみ
 | 名前 | 用途 |
 |---|---|
 | `CLOUDFLARE_API_TOKEN` | デプロイ・KV同期 |
+| `MICROCMS_WEBHOOK_SECRET` | Webhook プロキシ Worker の署名検証 |
+| `GITHUB_DISPATCH_TOKEN` | Webhook プロキシ → `repository_dispatch` |
 | `MICROCMS_SERVICE_DOMAIN` | CMS接続 |
 | `MICROCMS_API_KEY` | CMS接続 |
 | `GSC_SERVICE_ACCOUNT_JSON` | GSCレポート |

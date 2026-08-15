@@ -82,6 +82,20 @@ https://{PUBLIC_SITE_URL}/preview/?id={CONTENT_ID}&draftKey={DRAFT_KEY}
 
 4. **Webhook プロキシ Worker** をデプロイする（GitHub トークンを microCMS に置かないため）:
 
+   `main` への push（`worker/webhook-proxy/` 変更時）または手動実行で
+   `.github/workflows/deploy-webhook-proxy.yml` がデプロイする。
+
+   初回または Secrets 変更時は GitHub Secrets に以下を設定する:
+
+   | Secret | 用途 |
+   |---|---|
+   | `MICROCMS_WEBHOOK_SECRET` | microCMS Webhook 署名検証 |
+   | `GITHUB_DISPATCH_TOKEN` | `repository_dispatch` 送信用 PAT |
+
+   `GITHUB_REPO` は CI が `github.repository` から自動設定する（手動設定不要）。
+
+   ローカルから手動デプロイする場合:
+
 ```bash
 cd worker/webhook-proxy
 npx wrangler secret put MICROCMS_WEBHOOK_SECRET
@@ -100,6 +114,8 @@ npx wrangler deploy
 | 名前 | 用途 |
 |---|---|
 | `CLOUDFLARE_API_TOKEN` | デプロイ・KV同期 |
+| `MICROCMS_WEBHOOK_SECRET` | Webhook プロキシ Worker の署名検証 |
+| `GITHUB_DISPATCH_TOKEN` | Webhook プロキシ → `repository_dispatch` |
 | `MICROCMS_SERVICE_DOMAIN` | CMS接続 |
 | `MICROCMS_API_KEY` | CMS接続 |
 | `GSC_SERVICE_ACCOUNT_JSON` | GSCレポート |
