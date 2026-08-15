@@ -123,11 +123,15 @@ npx wrangler deploy
 
 ### Variables
 
-| 名前 | 例 |
-|---|---|
-| `PUBLIC_SITE_URL` | `https://your-domain.com` |
-| `PUBLIC_IMAGE_BASE` | `https://img.your-domain.com` |
-| `CONTENT_SOURCE` | `microcms`（本番） |
+| 名前 | 例 | 備考 |
+|---|---|---|
+| `KV_NAMESPACE_ID` | `abc123...` | 必須（未設定時デプロイ失敗） |
+| `SESSION_KV_NAMESPACE_ID` | `def456...` | 省略時は `KV_NAMESPACE_ID` を流用 |
+| `PUBLIC_SITE_URL` | `https://toinoba.com` | 省略可（`src/config/domain.ts` の既定値） |
+| `PUBLIC_IMAGE_BASE` | `https://img.toinoba.com` | 省略可（同上） |
+| `CONTENT_SOURCE` | `microcms`（本番） | 省略時 `local` |
+| `PUBLIC_INDEXABLE` | `true` | **最後に**設定。未設定 = 非公開 |
+| `LAUNCH_STRICT` | `true` | Phase 0 完了後に prelaunch strict を CI で有効化 |
 
 ## 品質ゲート（公開前に全て合格）
 
