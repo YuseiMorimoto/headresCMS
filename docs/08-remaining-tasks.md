@@ -1,52 +1,85 @@
-# 08. 残タスク（人間作業）
+# 08. 残タスク
 
-コード側の Phase 1〜5 基盤は main にマージ済み（PR #2〜#15）。
-ここでは**人間が判断・設定する残作業**をチェックリスト形式で整理する。
+最終更新: 2026-08-15（PR #16・#17 マージ後）
 
-> 自動検証: `npm run prelaunch`（警告） / `npm run prelaunch -- --strict`（ダミーデータで失敗）
+コード基盤（Phase 1〜5 + 公開スイッチ + Webhook CI）は **main に反映済み**。
+以下は**あなたが手動で行う作業**のみ。チェックを付けながら進めてください。
 
-## A. インフラ・CI
+> 進捗確認: `npm run prelaunch`（警告モード） / `npm run prelaunch -- --strict`（Phase 0 完了後）
 
-- [x] **A-1** ドメイン取得（`toinoba.com` — Cloudflare Registrar）
-- [ ] **A-2** GitHub Secrets: `CLOUDFLARE_API_TOKEN` を設定する
-- [ ] **A-3** GitHub Variables: `KV_NAMESPACE_ID` を設定する（任意: `SESSION_KV_NAMESPACE_ID`）
-- [ ] **A-4** Cloudflare KV namespace を作成する（`LINKS` / `SESSION`）
-- [ ] **A-5** R2 バケット作成 + `img.toinoba.com` カスタムドメイン割り当て
-- [ ] **A-6** `main` push で `deploy.yml` が成功することを確認する
+---
 
-## B. microCMS・Webhook
+## コード側（完了済み・対応不要）
 
-- [ ] **B-1** microCMS 本番 API を `docs/01-data-model.md` のスキーマで作成する
+- [x] サイト基盤・ページ・Worker・CI/CD（PR #2〜#15）
+- [x] 本番ドメイン `toinoba.com` のコード反映（`src/config/domain.ts`）
+- [x] 公開スイッチ `PUBLIC_INDEXABLE`（既定=非公開、noindex + Disallow:/）
+- [x] デプロイ CI の設定漏れ検知（KV ID / `CLOUDFLARE_API_TOKEN`）
+- [x] Webhook プロキシ Worker + `deploy-webhook-proxy.yml`（Secrets 設定後に自動デプロイ）
+- [x] サイト名・キャッチコピー・トップ/運営者情報のブランド文言
+- [x] README / 公開チェックリスト（`docs/07-launch-checklist.md`）
+
+---
+
+## 公開までに必要（人間作業）
+
+### A. Cloudflare・GitHub（インフラ）
+
+- [x] **A-1** ドメイン取得（`toinoba.com`）
+- [ ] **A-2** Cloudflare で KV namespace を作成（`LINKS` / `SESSION`）
+- [ ] **A-3** GitHub Variables: `KV_NAMESPACE_ID`（任意: `SESSION_KV_NAMESPACE_ID`）
+- [ ] **A-4** GitHub Secrets: `CLOUDFLARE_API_TOKEN`
+- [ ] **A-5** R2 バケット作成 + `img.toinoba.com` を割り当て
+- [ ] **A-6** `main` push で `deploy.yml` が成功することを確認
+
+### B. microCMS 連携
+
+- [ ] **B-1** microCMS 本番 API を `docs/01-data-model.md` のスキーマで作成
 - [ ] **B-2** GitHub Secrets: `MICROCMS_SERVICE_DOMAIN` / `MICROCMS_API_KEY`
-- [ ] **B-3** GitHub Variables: `CONTENT_SOURCE=microcms`（本番ビルド用）
-- [ ] **B-4** Webhook プロキシ Worker をデプロイする（`worker/webhook-proxy/`）
-  - Secrets: `MICROCMS_WEBHOOK_SECRET`, `GITHUB_DISPATCH_TOKEN`, `GITHUB_REPO`
-- [ ] **B-5** microCMS Webhook URL にプロキシ Worker の URL を設定する
-- [ ] **B-6** プレビュー URL を設定する: `https://toinoba.com/preview/?id={CONTENT_ID}&draftKey={DRAFT_KEY}`
+- [ ] **B-3** GitHub Variables: `CONTENT_SOURCE=microcms`
+- [ ] **B-4** GitHub Secrets: `MICROCMS_WEBHOOK_SECRET` / `GITHUB_DISPATCH_TOKEN` を設定し、Webhook プロキシ Worker の初回デプロイを確認
+- [ ] **B-5** microCMS の Webhook URL にプロキシ Worker の URL を設定
+- [ ] **B-6** microCMS のプレビュー URL を設定  
+  `https://toinoba.com/preview/?id={CONTENT_ID}&draftKey={DRAFT_KEY}`
 
-## C. Phase 0（コンテンツ戦略）
+### C. コンテンツ（Phase 0）
 
-- [ ] **C-1** ジャンル・編集方針を確定する
-- [ ] **C-2** トピッククラスタ 12〜15 件を `src/config/clusters.ts` に定義する（`example-*` を差し替え）
-- [ ] **C-3** 記事テンプレート見出しを `docs/05-content-templates.md` に具体化する
-- [ ] **C-4** 提携 ASP と案件を `data/links.json` に投入する（ダミー URL を実案件に差し替え）
-- [ ] **C-5** `src/config/site.ts` の Google フォーム URL を本番値に更新する
-- [ ] **C-6** 記事コンテンツを microCMS に投入する（公開は人間が行う）
+- [ ] **C-1** ジャンル・編集方針を確定
+- [ ] **C-2** クラスタ 12〜15 件を `src/config/clusters.ts` に定義（`example-*` を差し替え）
+- [ ] **C-3** 提携 ASP と案件を `data/links.json` に投入（ダミー URL を実案件に差し替え）
+- [ ] **C-4** `src/config/site.ts` の Google フォーム URL を本番値に更新
+- [ ] **C-5** 記事を microCMS に投入（**公開ボタンは人間が押す**）
 
-## D. 品質・公開
+### D. 公開前確認 → 公開
 
-- [ ] **D-1** `npm run prelaunch -- --strict` が合格する
-- [ ] **D-2** Lighthouse: 記事詳細で Performance 95+ / Accessibility 95+
-- [ ] **D-3** `/go/{slug}` が 302 で正しい遷移先にリダイレクトする（本番 KV 同期後）
+- [ ] **D-1** `npm run sync-links` で KV に案件データを同期
+- [ ] **D-2** `npm run prelaunch -- --strict` が合格
+- [ ] **D-3** 本番で `/go/{slug}` が 302 で正しい遷移先へリダイレクト
 - [ ] **D-4** Search Console にプロパティ追加 + サイトマップ送信
-- [ ] **D-5** GitHub Secrets: `GSC_SERVICE_ACCOUNT_JSON`（GSC レポート用）
-- [ ] **D-6** **最後に** GitHub Variables: `PUBLIC_INDEXABLE=true` を設定する
+- [ ] **D-5** **最後に** GitHub Variables: `PUBLIC_INDEXABLE=true`
 
-## E. 任意・運用
+---
 
-- [ ] **E-1** GitHub Secrets: `ANTHROPIC_API_KEY`（AI 下書き生成を使う場合）
-- [ ] **E-2** ブランド方向に沿った UI / 記事型の見直し（ComparisonTable 等）
-- [ ] **E-3** `LAUNCH_STRICT=true` を CI で有効化する（Phase 0 完了後）
+## 任意（運用開始後で可）
+
+- [ ] AI 下書き生成を使う → GitHub Secrets: `ANTHROPIC_API_KEY`
+- [ ] GSC 週次レポートを使う → GitHub Secrets: `GSC_SERVICE_ACCOUNT_JSON` + Search Console 権限付与
+- [ ] 記事型 UI の見直し（ComparisonTable 等）→ Phase 0 のクラスタ・記事型確定後
+- [ ] 記事テンプレート見出しの具体化 → `docs/05-content-templates.md`（下書き生成精度を上げたい場合）
+
+---
+
+## 残り件数（目安）
+
+| 区分 | 未完了 |
+|---|---|
+| A. インフラ | 5 / 6 |
+| B. microCMS | 6 / 6 |
+| C. コンテンツ | 5 / 5 |
+| D. 公開 | 5 / 5 |
+| **合計（必須）** | **21 件** |
+
+---
 
 ## 参照
 
