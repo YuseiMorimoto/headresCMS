@@ -79,6 +79,14 @@ jobs:
           fi
           echo "KV namespace ID は解決済み"
 
+      - name: Verify Cloudflare credentials
+        run: |
+          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
+            echo "::error::CLOUDFLARE_API_TOKEN が未設定です。GitHub Secrets に Cloudflare API トークンを設定してください（docs/07-launch-checklist.md § GitHub 設定）"
+            exit 1
+          fi
+          echo "CLOUDFLARE_API_TOKEN は設定済み"
+
       - name: Deploy to Cloudflare
         run: npx wrangler deploy
         env:
