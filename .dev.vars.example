@@ -2,8 +2,11 @@
 MICROCMS_SERVICE_DOMAIN=your-service.microcms.io
 MICROCMS_API_KEY=your-api-key
 CONTENT_SOURCE=local
-PUBLIC_SITE_URL=https://example.com
-PUBLIC_IMAGE_BASE=https://img.example.com
+
+# 未設定なら src/config/domain.ts の本番既定値が使われる。
+# ステージング等で切り替えたいときだけ指定する。
+# PUBLIC_SITE_URL=https://toinoba.com
+# PUBLIC_IMAGE_BASE=https://img.toinoba.com
 
 # Cloudflare (sync-links / deploy)
 # CLOUDFLARE_API_TOKEN=your-token

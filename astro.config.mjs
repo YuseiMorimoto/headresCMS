@@ -3,9 +3,10 @@ import { defineConfig } from "astro/config";
 import cloudflare from "@astrojs/cloudflare";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
+import { PRODUCTION_IMAGE_BASE, PRODUCTION_SITE_URL, resolveUrl } from "./src/config/domain.ts";
 
-const siteUrl = process.env.PUBLIC_SITE_URL ?? "https://example.com";
-const imageBase = process.env.PUBLIC_IMAGE_BASE ?? "https://img.example.com";
+const siteUrl = resolveUrl(process.env.PUBLIC_SITE_URL, PRODUCTION_SITE_URL);
+const imageBase = resolveUrl(process.env.PUBLIC_IMAGE_BASE, PRODUCTION_IMAGE_BASE);
 
 /** @type {import('astro').AstroUserConfig} */
 export default defineConfig({

@@ -1,6 +1,9 @@
 {
-  "name": "affiliate-site",
+  "name": "toinoba",
   "compatibility_date": "2026-08-01",
+  "routes": [
+    { "pattern": "toinoba.com", "custom_domain": true }
+  ],
   "assets": {
     "directory": "./dist/client",
     "not_found_handling": "404-page",

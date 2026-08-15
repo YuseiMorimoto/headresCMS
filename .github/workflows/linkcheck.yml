@@ -26,8 +26,8 @@ jobs:
         run: npm run build
         env:
           CONTENT_SOURCE: local
-          PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL || 'https://example.com' }}
-          PUBLIC_IMAGE_BASE: ${{ vars.PUBLIC_IMAGE_BASE || 'https://img.example.com' }}
+          PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+          PUBLIC_IMAGE_BASE: ${{ vars.PUBLIC_IMAGE_BASE }}
 
       - name: Check internal links with lychee
         uses: lycheeverse/lychee-action@v2

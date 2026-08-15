@@ -2,6 +2,11 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { execSync } from "node:child_process";
 import { CLUSTERS } from "../src/config/clusters.ts";
+import {
+  PRODUCTION_IMAGE_BASE,
+  PRODUCTION_SITE_URL,
+  resolveUrl,
+} from "../src/config/domain.ts";
 import { verifyBuiltHtml, verifyMarkdownContent } from "./verify-content.ts";
 
 const strict = process.argv.includes("--strict");
@@ -75,33 +80,23 @@ function checkPhase0(): void {
   }
 }
 
+/**
+ * 環境変数が未設定でも src/config/domain.ts の本番既定値に解決されるため、
+ * 「設定されているか」ではなく「解決結果が本番URLとして妥当か」を検証する。
+ */
 function checkEnv(): void {
-  const siteUrl = process.env.PUBLIC_SITE_URL ?? "";
-  if (!siteUrl || siteUrl.includes("example.com")) {
-    check(
-      "環境変数: PUBLIC_SITE_URL",
-      !strict,
-      strict ? "PUBLIC_SITE_URL が未設定または example.com のままです" : "警告: PUBLIC_SITE_URL が example.com",
-    );
-  } else {
-    check("環境変数: PUBLIC_SITE_URL", true, siteUrl);
-  }
+  const siteUrl = resolveUrl(process.env.PUBLIC_SITE_URL, PRODUCTION_SITE_URL);
+  const siteOk = siteUrl.startsWith("https://") && !siteUrl.includes("example.com");
+  check("サイトURL", siteOk, siteOk ? siteUrl : `本番URLとして不正です: ${siteUrl}`);
 
-  const imageBase = process.env.PUBLIC_IMAGE_BASE ?? "";
-  if (!imageBase || imageBase.includes("img.example.com")) {
-    check(
-      "環境変数: PUBLIC_IMAGE_BASE",
-      !strict,
-      strict ? "PUBLIC_IMAGE_BASE が未設定またはプレースホルダです" : "警告: PUBLIC_IMAGE_BASE がプレースホルダ",
-    );
-  } else {
-    check("環境変数: PUBLIC_IMAGE_BASE", true, imageBase);
-  }
+  const imageBase = resolveUrl(process.env.PUBLIC_IMAGE_BASE, PRODUCTION_IMAGE_BASE);
+  const imageOk = imageBase.startsWith("https://") && !imageBase.includes("example.com");
+  check("画像ベースURL", imageOk, imageOk ? imageBase : `本番URLとして不正です: ${imageBase}`);
 }
 
 function checkRobots(): void {
   const robots = readFileSync(join(process.cwd(), "public/robots.txt"), "utf-8");
-  const siteUrl = (process.env.PUBLIC_SITE_URL ?? "https://example.com").replace(/\/$/, "");
+  const siteUrl = resolveUrl(process.env.PUBLIC_SITE_URL, PRODUCTION_SITE_URL);
 
   const ok =
     robots.includes("Disallow: /go/") &&
