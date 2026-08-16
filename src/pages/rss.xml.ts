@@ -1,10 +1,10 @@
 import rss from "@astrojs/rss";
-import { getCollection } from "astro:content";
 import { site } from "@/config/site.ts";
+import { getPosts } from "@/lib/posts.ts";
 import type { APIRoute } from "astro";
 
 export const GET: APIRoute = async () => {
-  const posts = (await getCollection("posts", ({ data }) => !data.noindex))
+  const posts = (await getPosts(({ data }) => !data.noindex))
     .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
     .slice(0, 20);
 

@@ -7,11 +7,18 @@ import PostCard from "@/components/ui/PostCard.astro";
 import Toc from "@/components/article/Toc.astro";
 import ArticleHeader from "@/components/article/ArticleHeader.astro";
 import { CLUSTERS, clusterById } from "@/config/clusters.ts";
+import { getPosts } from "@/lib/posts.ts";
 import { extractToc } from "@/lib/toc.ts";
 import { buildArticleJsonLd, buildBreadcrumbJsonLd, clusterUrl } from "@/lib/schema.ts";
-import { getCollection, getEntry, render as renderEntry } from "astro:content";
+import { getEntry, render as renderEntry } from "astro:content";
 
 export async function getStaticPaths() {
+  const posts = await getPosts();
+  // 記事 0 件は初期セットアップ。ダミークラスタの空ページを生成しない。
+  // 1 件以上あれば従来どおり全クラスタを出し、ピラー欠落はページ本体で失敗させる。
+  if (posts.length === 0) {
+    return [];
+  }
   return CLUSTERS.map((cluster) => ({
     params: { cluster: cluster.id },
   }));
@@ -20,7 +27,7 @@ export async function getStaticPaths() {
 const { cluster } = Astro.params;
 const clusterInfo = clusterById.get(cluster!)!;
 
-const allPosts = await getCollection("posts", ({ data }) => !data.noindex);
+const allPosts = await getPosts(({ data }) => !data.noindex);
 const clusterPosts = allPosts
   .filter((p) => p.data.cluster === cluster)
   .sort((a, b) => a.data.publishedAt.getTime() - b.data.publishedAt.getTime());

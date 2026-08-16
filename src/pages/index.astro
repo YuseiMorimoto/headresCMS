@@ -4,13 +4,17 @@ import PostCard from "@/components/ui/PostCard.astro";
 import { SITE_DESCRIPTION } from "@/config/brand.ts";
 import { CLUSTERS } from "@/config/clusters.ts";
 import { site } from "@/config/site.ts";
-import { getCollection } from "astro:content";
+import { getPosts } from "@/lib/posts.ts";
 
-const posts = (await getCollection("posts", ({ data }) => !data.noindex))
-  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+const posts = (await getPosts(({ data }) => !data.noindex)).sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
+);
 
 const latest = posts.slice(0, 12);
-const sortedClusters = [...CLUSTERS].sort((a, b) => a.order - b.order);
+const sortedClusters =
+  posts.length === 0
+    ? []
+    : [...CLUSTERS].sort((a, b) => a.order - b.order);
 ---
 
 <BaseLayout

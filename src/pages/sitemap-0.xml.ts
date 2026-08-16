@@ -1,13 +1,13 @@
 import type { APIRoute } from "astro";
-import { getCollection } from "astro:content";
 import { CLUSTERS } from "@/config/clusters.ts";
 import { site, POSTS_PER_PAGE } from "@/config/site.ts";
+import { getPosts } from "@/lib/posts.ts";
 
 type SitemapUrl = { loc: string; lastmod?: string };
 
 export const GET: APIRoute = async () => {
   // noindex 記事は robots メタだけでなく sitemap からも除外する（docs/02 SEO要件）
-  const posts = (await getCollection("posts", ({ data }) => !data.noindex)).sort(
+  const posts = (await getPosts(({ data }) => !data.noindex)).sort(
     (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
   );
 
@@ -18,7 +18,7 @@ export const GET: APIRoute = async () => {
     { loc: `${site.url}/about/` },
     { loc: `${site.url}/privacy/` },
     { loc: `${site.url}/disclaimer/` },
-    ...CLUSTERS.map((c) => ({ loc: `${site.url}/c/${c.id}/` })),
+    ...(posts.length === 0 ? [] : CLUSTERS.map((c) => ({ loc: `${site.url}/c/${c.id}/` }))),
     ...Array.from({ length: totalPages }, (_, i) => ({
       loc: `${site.url}/page/${i + 1}/`,
     })),

@@ -15,10 +15,11 @@ import {
   buildBreadcrumbJsonLd,
   clusterUrl,
 } from "@/lib/schema.ts";
-import { getCollection, getEntry, render as renderEntry } from "astro:content";
+import { getPosts } from "@/lib/posts.ts";
+import { getEntry, render as renderEntry } from "astro:content";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("posts");
+  const posts = await getPosts();
   return posts.map((post) => ({
     params: { cluster: post.data.cluster, slug: post.id },
   }));
@@ -31,7 +32,7 @@ if (!post || post.data.cluster !== cluster) {
   return Astro.redirect("/404");
 }
 
-const allPosts = await getCollection("posts", ({ data }) => !data.noindex);
+const allPosts = await getPosts(({ data }) => !data.noindex);
 const clusterPosts = allPosts
   .filter((p) => p.data.cluster === cluster)
   .sort((a, b) => a.data.publishedAt.getTime() - b.data.publishedAt.getTime());
