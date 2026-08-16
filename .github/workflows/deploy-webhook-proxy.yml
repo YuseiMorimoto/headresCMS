@@ -12,7 +12,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      WEBHOOK_SECRETS_SET: ${{ secrets.MICROCMS_WEBHOOK_SECRET != '' && secrets.GITHUB_DISPATCH_TOKEN != '' }}
+      WEBHOOK_SECRETS_SET: ${{ secrets.MICROCMS_WEBHOOK_SECRET != '' && secrets.DISPATCH_TOKEN != '' }}
     concurrency:
       group: deploy-webhook-proxy
       cancel-in-progress: true
@@ -39,7 +39,7 @@ jobs:
           if [ -z "${{ secrets.MICROCMS_WEBHOOK_SECRET }}" ]; then
             echo "::warning::MICROCMS_WEBHOOK_SECRET が未設定です。Worker はデプロイされますが、署名検証は失敗します"
           fi
-          if [ -z "${{ secrets.GITHUB_DISPATCH_TOKEN }}" ]; then
+          if [ -z "${{ secrets.DISPATCH_TOKEN }}" ]; then
             echo "::warning::GITHUB_DISPATCH_TOKEN が未設定です。Worker はデプロイされますが、repository_dispatch は送信できません"
           fi
 
@@ -49,7 +49,7 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           MICROCMS_WEBHOOK_SECRET: ${{ secrets.MICROCMS_WEBHOOK_SECRET }}
-          GITHUB_DISPATCH_TOKEN: ${{ secrets.GITHUB_DISPATCH_TOKEN }}
+          GITHUB_DISPATCH_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
           GITHUB_REPO: ${{ github.repository }}
         run: |
           printf '%s' "$MICROCMS_WEBHOOK_SECRET" | npx wrangler secret put MICROCMS_WEBHOOK_SECRET
