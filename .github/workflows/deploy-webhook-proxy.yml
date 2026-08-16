@@ -11,6 +11,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      WEBHOOK_SECRETS_SET: ${{ secrets.MICROCMS_WEBHOOK_SECRET != '' && secrets.GITHUB_DISPATCH_TOKEN != '' }}
     concurrency:
       group: deploy-webhook-proxy
       cancel-in-progress: true
@@ -42,7 +44,7 @@ jobs:
           fi
 
       - name: Sync Worker secrets
-        if: ${{ secrets.MICROCMS_WEBHOOK_SECRET != '' && secrets.GITHUB_DISPATCH_TOKEN != '' }}
+        if: ${{ env.WEBHOOK_SECRETS_SET == 'true' }}
         working-directory: worker/webhook-proxy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
