@@ -42,7 +42,7 @@ jobs:
           fi
 
       - name: Sync Worker secrets
-        if: secrets.MICROCMS_WEBHOOK_SECRET != '' && secrets.GITHUB_DISPATCH_TOKEN != ''
+        if: ${{ secrets.MICROCMS_WEBHOOK_SECRET != '' && secrets.GITHUB_DISPATCH_TOKEN != '' }}
         working-directory: worker/webhook-proxy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
