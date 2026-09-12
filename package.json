@@ -19,7 +19,10 @@
     "cannibalization": "tsx scripts/cannibalization.ts",
     "generate-draft": "tsx scripts/generate-draft.ts",
     "prelaunch": "tsx scripts/prelaunch-check.ts",
-    "verify-content": "tsx scripts/verify-content.ts"
+    "verify-content": "tsx scripts/verify-content.ts",
+    "test:ops": "tsx --test src/ops/ops.test.ts",
+    "check-approvals": "tsx scripts/check-approvals.ts",
+    "ops-run": "tsx scripts/ops-run.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.57.0",

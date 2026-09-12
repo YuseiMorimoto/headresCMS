@@ -1,0 +1,43 @@
+import type { OpsSettings } from "./settings.ts";
+
+/** `data/ops-settings.json` と同じ初期値。Worker は JSON を読めないためここを参照する。 */
+export const DEFAULT_OPS_SETTINGS: OpsSettings = {
+  timezone: "Asia/Tokyo",
+  automationEnabled: true,
+  weeklyNewArticles: 2,
+  weeklyRevisions: 2,
+  maxAwaitingApproval: 5,
+  monthlyCapYen: 5000,
+  reserveBufferYen: 500,
+  articleReserveCapYen: 200,
+  budgetNotifyPercent: 80,
+  budgetStopPercent: 90,
+  freshnessDays: { pricing: 7, other: 30 },
+  pivotGuard: { minDaysLive: 28, minClicks: 100 },
+  retentionDays: { jobLogs: 90, aggregatesMonths: 24 },
+  schedules: {
+    sync: { hour: 6, weekdays: [0, 1, 2, 3, 4, 5, 6] },
+    plan: { hour: 7, weekdays: [1] },
+    analyze: { hour: 7, weekdays: [1] },
+    generate: { hour: 8, weekdays: [2, 5] },
+  },
+  allowedFetchHosts: [
+    "example.com",
+    "www.example.com",
+    "impact.com",
+    "api.impact.com",
+    "integrations.impact.com",
+  ],
+  fixedCosts: [],
+  priceBook: [
+    {
+      provider: "anthropic",
+      model: "claude-sonnet-4-20250514",
+      inputYenPerMTok: 450,
+      outputYenPerMTok: 2250,
+      safetyFactor: 1.2,
+      confirmedAt: "2026-09-12T00:00:00+09:00",
+      fx: { usdJpy: 150, asOf: "2026-09-12", source: "manual-seed" },
+    },
+  ],
+};

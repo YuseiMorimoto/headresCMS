@@ -1,0 +1,49 @@
+name: deploy-ops
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "worker/ops/**"
+      - "src/ops/**"
+      - "data/ops-settings.json"
+      - ".github/workflows/deploy-ops.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-ops
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22.12"
+          cache: npm
+      - run: npm ci
+      - run: npm run test:ops
+      - name: Verify Cloudflare credentials
+        run: |
+          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
+            echo "::error::CLOUDFLARE_API_TOKEN が未設定です"
+            exit 1
+          fi
+      - name: Apply D1 migrations
+        if: vars.OPS_D1_ID != ''
+        working-directory: worker/ops
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          sed -i "s/<OPS_D1_ID>/${{ vars.OPS_D1_ID }}/g" wrangler.jsonc
+          npx wrangler d1 migrations apply toinoba-ops --remote
+      - name: Deploy ops Worker
+        if: vars.OPS_D1_ID != ''
+        working-directory: worker/ops
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: npx wrangler deploy
+      - name: Skip deploy when D1 is missing
+        if: vars.OPS_D1_ID == ''
+        run: echo "::warning::OPS_D1_ID が未設定のため ops Worker のデプロイをスキップしました"

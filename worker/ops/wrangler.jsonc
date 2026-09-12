@@ -1,0 +1,40 @@
+{
+  "name": "toinoba-ops",
+  "compatibility_date": "2026-08-01",
+  "main": "./src/index.ts",
+  "observability": { "enabled": true },
+  "triggers": {
+    "crons": ["0 * * * *"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "toinoba-ops",
+      "database_id": "<OPS_D1_ID>"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "OPS_BUCKET",
+      "bucket_name": "toinoba-ops"
+    }
+  ],
+  "env": {
+    "staging": {
+      "name": "toinoba-ops-staging",
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "toinoba-ops-staging",
+          "database_id": "<OPS_D1_STAGING_ID>"
+        }
+      ],
+      "r2_buckets": [
+        {
+          "binding": "OPS_BUCKET",
+          "bucket_name": "toinoba-ops-staging"
+        }
+      ]
+    }
+  }
+}
