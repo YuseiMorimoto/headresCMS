@@ -60,6 +60,14 @@
 
 ---
 
+## 自動化運用（コードは実装済み・接続は外部依存）
+
+- [ ] Cloudflare で D1 `toinoba-ops` / R2 `toinoba-ops` を作成し `OPS_D1_ID` を Variables へ
+- [ ] `OPS_TRIGGER_SECRET` / `PREVIEW_TOKEN` を wrangler secret へ
+- [ ] `data/ops-settings.json` の `fixedCosts` に実固定費を入れる（空だと有料生成は始まらない）
+- [ ] 採用案件と impact.com 資格が揃ったら `docs/12-connection-matrix.md` の実接続欄を更新
+- [ ] 手順: [`docs/13-ops-runbook.md`](13-ops-runbook.md)
+
 ## 任意（運用開始後で可）
 
 - [ ] AI 下書き生成を使う → GitHub Secrets: `ANTHROPIC_API_KEY`

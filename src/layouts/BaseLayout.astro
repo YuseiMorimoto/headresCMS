@@ -12,6 +12,7 @@ type Props = {
   noindex?: boolean;
   jsonLd?: Record<string, unknown>[];
   breadcrumbs?: BreadcrumbItem[];
+  versionId?: string;
 };
 
 const {
@@ -22,6 +23,7 @@ const {
   noindex = false,
   jsonLd = [],
   breadcrumbs = [],
+  versionId,
 } = Astro.props;
 ---
 
@@ -37,6 +39,7 @@ const {
       ogImage={ogImage}
       noindex={noindex}
       jsonLd={jsonLd}
+      versionId={versionId}
     />
   </head>
   <body class="min-h-screen bg-white text-gray-900 antialiased">

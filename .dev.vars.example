@@ -21,3 +21,10 @@ CONTENT_SOURCE=local
 # MICROCMS_WEBHOOK_SECRET=your-webhook-secret
 # GITHUB_DISPATCH_TOKEN=ghp_...
 # GITHUB_REPO=owner/repo  # ローカル手動デプロイ時のみ
+
+# ops Worker（worker/ops）
+# OPS_TRIGGER_SECRET=replace-with-16-plus-chars
+# PREVIEW_TOKEN=replace-with-16-plus-chars
+# AUTOMATION_DISABLED=1
+# IMPACT_ACCOUNT_SID=
+# IMPACT_AUTH_TOKEN=

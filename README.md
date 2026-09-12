@@ -55,6 +55,8 @@ Phase 0（クラスタ・記事・案件）が未確定のままインデック�
 | `gsc-report.yml` | 毎週月曜 06:00 JST | GSCリライト候補レポート → Issue |
 | `cannibalization.yml` | 毎月1日 06:00 JST | キーワード重複検出 → Issue |
 | `draft.yml` | 手動 | AI下書き生成 → Draft PR |
+| `deploy-ops.yml` | push(main, ops 変更) / 手動 | 運営ジョブ Worker（D1 / Cron）。運営画面はなし |
+| `backup-d1.yml` | 毎日 04:00 JST | D1 エクスポート成果物 |
 | `export.yml` | 毎週日曜 04:00 JST | CMS → Markdown エクスポート |
 
 ### ローカル実行
@@ -64,6 +66,8 @@ npm run check-offers      # 案件URL疎通確認
 npm run cannibalization   # キーワード重複レポート生成
 npm run gsc-report        # GSCデータ取得（要 GSC_SERVICE_ACCOUNT_JSON）
 npm run generate-draft -- --title "..." --keywords "kw1,kw2" --type review --cluster example-a
+npm run test:ops            # 自動化コアの受入試験（T01〜T14 の自動分）
+npm run ops-run             # 今の JST で起動予定のジョブを表示
 ```
 
 ## 公開準備
