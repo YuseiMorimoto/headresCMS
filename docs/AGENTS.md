@@ -21,7 +21,7 @@
 - 案件リンクには `rel="sponsored nofollow noopener"` を付ける
 - 画像は Cloudflare R2 に置く。microCMS の画像フィールドを使わない
 - `firsthand` フィールドは必須。空を許容するスキーマ変更をしない
-- 記事を自動公開する処理を実装しない。自動化は下書き作成までで停止する
+- 記事を自動公開する処理を実装しない。公開は運営者の明示操作（GitHub 上の Draft PR マージ等）でのみ行う
 - ASP のサブIDパラメータ名を推測で埋めない。不明な場合は `null` のままにして PR で報告する
 - サイト内の301リダイレクトは `_redirects`（Workers Static Assets の機能）で処理する。Worker コードで実装しない
 - `public/_redirects` を直接編集しない。マスタは `data/redirects.json`、生成は `scripts/build-redirects.ts`
