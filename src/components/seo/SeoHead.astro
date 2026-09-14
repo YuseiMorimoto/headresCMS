@@ -9,9 +9,10 @@ type Props = {
   ogImage?: string;
   noindex?: boolean;
   jsonLd?: Record<string, unknown>[];
+  versionId?: string;
 };
 
-const { title, description, canonical, ogImage, noindex = false, jsonLd = [] } = Astro.props;
+const { title, description, canonical, ogImage, noindex = false, jsonLd = [], versionId } = Astro.props;
 const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
 const canonicalUrl = canonical ?? Astro.url.href;
 const image = ogImage ?? `${site.url}/og-default.png`;
@@ -24,6 +25,7 @@ const suppressIndex = noindex || !isIndexable(import.meta.env.PUBLIC_INDEXABLE);
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalUrl} />
 {suppressIndex && <meta name="robots" content="noindex,nofollow" />}
+{versionId && <meta name="toinoba:version" content={versionId} />}
 
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />

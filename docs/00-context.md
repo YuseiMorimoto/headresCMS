@@ -104,6 +104,21 @@
 - お問い合わせフォームの自前実装（Googleフォームの埋め込みで代替する）
 - ビルド失敗の外部通知（GitHub の標準通知で運用し、必要になったら追加する）
 
+## 自動化の文書
+
+コードは `src/ops/` と Worker `toinoba-ops`。運営画面は作らない。公開は Draft PR のマージのみ。
+
+| 文書 | 内容 |
+|---|---|
+| [`docs/09-automation-requirements.md`](09-automation-requirements.md) | 要件定義 |
+| [`docs/10-automation-requirements-map.md`](10-automation-requirements-map.md) | 既存機能との対応 |
+| [`docs/11-automation-plan.md`](11-automation-plan.md) | 実装計画 |
+| [`docs/12-connection-matrix.md`](12-connection-matrix.md) | ASP 接続マトリクス |
+| [`docs/13-ops-runbook.md`](13-ops-runbook.md) | 日常運用・停止・復旧 |
+| [`docs/14-operator-handoff-prompt.md`](14-operator-handoff-prompt.md) | 別AIへの引き継ぎ文 |
+| [`docs/15-ops-initial-setup.md`](15-ops-initial-setup.md) | D1 / R2 / 秘密値 / 固定費 / impact.com の初期設定 |
+| [`docs/15-ops-initial-setup.copy.txt`](15-ops-initial-setup.copy.txt) | 上記手順のコピー用全文 |
+
 ## 品質ゲート
 
 以下を満たさないコードはマージしない。

@@ -9,9 +9,26 @@ import { clusterById } from "@/config/clusters.ts";
 import { site } from "@/config/site.ts";
 import { extractToc, addHeadingIds } from "@/lib/toc.ts";
 import { fetchDraftPost, validatePreviewParams } from "@/lib/microcms-preview.ts";
+import { authorizeSecret } from "@/ops/auth.ts";
 import { articleUrl, clusterUrl } from "@/lib/schema.ts";
 
 export const prerender = false;
+
+const versionId = Astro.url.searchParams.get("v");
+if (versionId) {
+  if (!/^[a-z0-9-]{1,80}$/.test(versionId)) {
+    return new Response("versionId の形式が不正です", { status: 400 });
+  }
+  const token = Astro.url.searchParams.get("token");
+  const expected = process.env.PREVIEW_TOKEN ?? import.meta.env.PREVIEW_TOKEN;
+  if (!authorizeSecret(token, typeof expected === "string" ? expected : undefined)) {
+    return new Response("unauthorized", { status: 401 });
+  }
+  return new Response(JSON.stringify({ authorized: true, versionId }), {
+    status: 200,
+    headers: { "content-type": "application/json", "X-Robots-Tag": "noindex, nofollow" },
+  });
+}
 
 const contentId = Astro.url.searchParams.get("id");
 const draftKey = Astro.url.searchParams.get("draftKey");

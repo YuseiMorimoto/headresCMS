@@ -38,6 +38,7 @@ const posts = defineCollection({
     firsthand: z.string().min(50),
 
     noindex: z.boolean().default(false),
+    versionId: z.string().regex(/^[a-z0-9-]+$/).optional(),
   }),
 });
 

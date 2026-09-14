@@ -40,6 +40,9 @@ jobs:
       - name: Lint content
         run: npm run lint-content
 
+      - name: Ops unit tests
+        run: npm run test:ops
+
       - name: Astro check
         run: npx astro check
         env:

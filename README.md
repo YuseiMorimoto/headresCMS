@@ -55,6 +55,8 @@ Phase 0（クラスタ・記事・案件）が未確定のままインデック�
 | `gsc-report.yml` | 毎週月曜 06:00 JST | GSCリライト候補レポート → Issue |
 | `cannibalization.yml` | 毎月1日 06:00 JST | キーワード重複検出 → Issue |
 | `draft.yml` | 手動 | AI下書き生成 → Draft PR |
+| `deploy-ops.yml` | push(main, ops 変更) / 手動 | 運営ジョブ Worker（D1 / Cron）。運営画面はなし |
+| `backup-d1.yml` | 毎日 04:00 JST | D1 エクスポート成果物 |
 | `export.yml` | 毎週日曜 04:00 JST | CMS → Markdown エクスポート |
 
 ### ローカル実行
@@ -64,6 +66,8 @@ npm run check-offers      # 案件URL疎通確認
 npm run cannibalization   # キーワード重複レポート生成
 npm run gsc-report        # GSCデータ取得（要 GSC_SERVICE_ACCOUNT_JSON）
 npm run generate-draft -- --title "..." --keywords "kw1,kw2" --type review --cluster example-a
+npm run test:ops            # 自動化コアの受入試験（T01〜T14 の自動分）
+npm run ops-run             # 今の JST で起動予定のジョブを表示
 ```
 
 ## 公開準備
@@ -79,6 +83,16 @@ npm run sync-links -- --dry-run  # KV同期の検証のみ
 ## 仕様
 
 `docs/` フォルダに仕様書を配置。エージェント向けルールは `AGENTS.md` を参照。
+
+自動化まわり:
+
+| 文書 | 内容 |
+|---|---|
+| [`docs/15-ops-initial-setup.md`](docs/15-ops-initial-setup.md) | D1 / R2 / 秘密値 / 固定費 / impact.com の初期設定手順 |
+| [`docs/15-ops-initial-setup.copy.txt`](docs/15-ops-initial-setup.copy.txt) | 上記手順のコピー用全文（Raw → 全選択） |
+| [`docs/13-ops-runbook.md`](docs/13-ops-runbook.md) | 日常運用・停止・復旧 |
+| [`docs/12-connection-matrix.md`](docs/12-connection-matrix.md) | ASP 接続の実装状態 |
+| [`docs/14-operator-handoff-prompt.md`](docs/14-operator-handoff-prompt.md) | 運営者の残作業を別AIに渡す文 |
 
 ## 環境変数
 
@@ -120,3 +134,4 @@ npm run sync-links -- --dry-run  # KV同期の検証のみ
 | `PUBLIC_IMAGE_BASE` | R2 画像ドメイン | `src/config/domain.ts` の既定値 |
 | `PUBLIC_INDEXABLE` | 検索エンジン公開 | 未設定 = 非公開 |
 | `LAUNCH_STRICT` | `true` で prelaunch を strict 実行 | 未設定 = 警告モード |
+| `OPS_D1_ID` | ops 用 D1 の `database_id`。未設定なら `deploy-ops` はスキップ | 未設定 |

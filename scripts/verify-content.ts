@@ -2,6 +2,7 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import matter from "gray-matter";
 import { PR_NOTICE } from "../src/config/brand.ts";
+import { checkApprovals } from "./check-approvals.ts";
 import {
   PRODUCTION_IMAGE_BASE,
   PRODUCTION_SITE_URL,
@@ -133,10 +134,11 @@ export function verifyBuiltHtml(): string[] {
   return errors;
 }
 
-function main() {
+async function main() {
   const markdownErrors = verifyMarkdownContent();
   const htmlErrors = verifyBuiltHtml();
-  const all = [...markdownErrors, ...htmlErrors];
+  const approvalErrors = await checkApprovals();
+  const all = [...markdownErrors, ...htmlErrors, ...approvalErrors];
 
   if (all.length > 0) {
     console.error("コンテンツ検証エラー:");

@@ -1,0 +1,32 @@
+name: backup-d1
+
+on:
+  schedule:
+    - cron: "0 19 * * *" # 04:00 JST
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22.12"
+          cache: npm
+      - run: npm ci
+      - name: Export D1
+        if: vars.OPS_D1_ID != '' && secrets.CLOUDFLARE_API_TOKEN != ''
+        working-directory: worker/ops
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          mkdir -p /tmp/d1-backup
+          npx wrangler d1 export toinoba-ops --remote --output /tmp/d1-backup/toinoba-ops.sql
+      - name: Upload artifact
+        if: vars.OPS_D1_ID != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: d1-backup
+          path: /tmp/d1-backup/toinoba-ops.sql
+          retention-days: 14
