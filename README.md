@@ -84,6 +84,15 @@ npm run sync-links -- --dry-run  # KV同期の検証のみ
 
 `docs/` フォルダに仕様書を配置。エージェント向けルールは `AGENTS.md` を参照。
 
+自動化まわり:
+
+| 文書 | 内容 |
+|---|---|
+| [`docs/15-ops-initial-setup.md`](docs/15-ops-initial-setup.md) | D1 / R2 / 秘密値 / 固定費 / impact.com の初期設定手順 |
+| [`docs/13-ops-runbook.md`](docs/13-ops-runbook.md) | 日常運用・停止・復旧 |
+| [`docs/12-connection-matrix.md`](docs/12-connection-matrix.md) | ASP 接続の実装状態 |
+| [`docs/14-operator-handoff-prompt.md`](docs/14-operator-handoff-prompt.md) | 運営者の残作業を別AIに渡す文 |
+
 ## 環境変数
 
 ### ローカル（`.dev.vars`）
@@ -124,3 +133,4 @@ npm run sync-links -- --dry-run  # KV同期の検証のみ
 | `PUBLIC_IMAGE_BASE` | R2 画像ドメイン | `src/config/domain.ts` の既定値 |
 | `PUBLIC_INDEXABLE` | 検索エンジン公開 | 未設定 = 非公開 |
 | `LAUNCH_STRICT` | `true` で prelaunch を strict 実行 | 未設定 = 警告モード |
+| `OPS_D1_ID` | ops 用 D1 の `database_id`。未設定なら `deploy-ops` はスキップ | 未設定 |

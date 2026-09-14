@@ -290,5 +290,6 @@ PR-02〜PR-06 と PR-08 は互いに独立して並行できる。PR-07 は運�
 | 接続機能マトリクス | `docs/12-connection-matrix.md`（PR-07） |
 | テストと結果 | `worker/ops/test/`、各 PR 説明 |
 | 月額費用試算 | 本書 §7 → コンソールの費用画面（実測で更新） |
-| 運営手順（初期設定・通常運用・停止・復旧） | `docs/13-ops-runbook.md`（PR-30） |
+| 運営手順（初期設定） | `docs/15-ops-initial-setup.md` |
+| 運営手順（通常運用・停止・復旧） | `docs/13-ops-runbook.md`（PR-30） |
 | 未解決事項一覧 | `docs/10` 要確認事項 + PR-30 で更新 |

@@ -9,7 +9,7 @@
 1. Cloudflare で D1 `toinoba-ops` と R2 `toinoba-ops` を作る
 2. GitHub Variables に `OPS_D1_ID` を入れる
 3. `wrangler secret put OPS_TRIGGER_SECRET` / `PREVIEW_TOKEN`（16文字以上の英数と `_` `-`）
-4. 既存固定費を `data/ops-settings.json` の `fixedCosts` に書く。空のままだと有料生成は開始しない
+4. 既存固定費を `data/ops-settings.json` の `fixedCosts` に書く。空のままだと有料生成は開始しない。書き方は [`docs/15` §4](15-ops-initial-setup.md)
 5. 採用案件が決まるまで ASP 資格は入れなくてよい。モックで試験する
 
 ## 通常運用

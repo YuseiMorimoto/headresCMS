@@ -132,6 +132,7 @@ npx wrangler deploy
 | `CONTENT_SOURCE` | `microcms`（本番） | 省略時 `local` |
 | `PUBLIC_INDEXABLE` | `true` | **最後に**設定。未設定 = 非公開 |
 | `LAUNCH_STRICT` | `true` | Phase 0 完了後に prelaunch strict を CI で有効化 |
+| `OPS_D1_ID` | D1 の UUID | ops Worker 用。未設定なら `deploy-ops` はスキップ。手順は `docs/15` |
 
 ## 品質ゲート（公開前に全て合格）
 
@@ -173,4 +174,6 @@ CONTENT_SOURCE=local PUBLIC_SITE_URL=https://your-domain.com PUBLIC_IMAGE_BASE=h
 4. microCMS で記事を公開する → Webhook → 再デプロイ
 5. Search Console でインデックス状況を確認する
 
-> **記事の公開操作は必ず人間が行う。** 自動化はデプロイまでであり、CMS での公開ボタンは人間が押す。
+> **記事の公開操作は必ず人間が行う。** 自動化はデプロイまでであり、CMS での公開ボタンは人間が押す。自動化運用（Git 経路）では公開トリガーは Draft PR のマージである。
+
+自動化用 D1 / R2 / 秘密値 / impact.com の初期設定は公開チェックリストとは別トラック。手順は [`docs/15-ops-initial-setup.md`](15-ops-initial-setup.md)。

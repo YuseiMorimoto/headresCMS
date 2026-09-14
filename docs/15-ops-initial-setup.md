@@ -1,13 +1,35 @@
 # 15. ops 初期設定の操作手順
 
 対象ブランチ: `cursor/automation-ops-core-5354`  
-根拠: [`worker/ops/wrangler.jsonc`](../worker/ops/wrangler.jsonc)、[`.github/workflows/deploy-ops.yml`](../.github/workflows/deploy-ops.yml)、[`src/ops/auth.ts`](../src/ops/auth.ts)、[`src/ops/connectors/asp.ts`](../src/ops/connectors/asp.ts)、[`src/pages/preview/index.astro`](../src/pages/preview/index.astro)
+根拠: [`worker/ops/wrangler.jsonc`](../worker/ops/wrangler.jsonc)、[`.github/workflows/deploy-ops.yml`](../.github/workflows/deploy-ops.yml)、[`src/ops/auth.ts`](../src/ops/auth.ts)、[`src/ops/connectors/asp.ts`](../src/ops/connectors/asp.ts)、[`src/pages/preview/index.astro`](../src/pages/preview/index.astro)、[`data/ops-settings.json`](../data/ops-settings.json)
 
-日常運用・停止・復旧は [`docs/13-ops-runbook.md`](13-ops-runbook.md)。接続の実装状態は [`docs/12-connection-matrix.md`](12-connection-matrix.md)。
+日常運用・停止・復旧は [`docs/13-ops-runbook.md`](13-ops-runbook.md)。接続の実装状態は [`docs/12-connection-matrix.md`](12-connection-matrix.md)。別AIへの引き継ぎ文は [`docs/14-operator-handoff-prompt.md`](14-operator-handoff-prompt.md)。
 
 秘密値（トークン・APIキー）をこの文書・チャット・Issue・コミットに書かない。
 
 `deploy-ops.yml` は `main` への push または手動実行（`workflow_dispatch`）で動く。ワークフローファイルがまだ `main` に無い間は、GitHub Actions からはデプロイできず、この文書のローカル wrangler 手順を使う。
+
+## この文書でやること
+
+| 順 | 作業 | 節 |
+|---|---|---|
+| 1 | D1 `toinoba-ops` と R2 `toinoba-ops` を作り、マイグレーションを当てる | §1 |
+| 2 | GitHub Variables に `OPS_D1_ID` を入れる | §1.5 |
+| 3 | `OPS_TRIGGER_SECRET` と `PREVIEW_TOKEN` を Cloudflare secret に入れる | §2 |
+| 4 | `data/ops-settings.json` の `fixedCosts` に実固定費を書く | §4 |
+| 5 | impact.com は紹介者アカウントと Campaigns 200 まで。Token を Worker に入れるのはその後 | §3 |
+
+4 まで終われば、モック経路での企画・検品・Draft PR 試験に進める。5 は提携承認がなくてもアカウント作成と空の Campaigns 確認まではできる。成果同期と運用可能化は提携後。
+
+完了の目安:
+
+- [ ] R2 `toinoba-ops` がある（公開オフ、カスタムドメインなし）
+- [ ] D1 `toinoba-ops` があり、`programs` / `ran_keys` などのテーブルが見える
+- [ ] GitHub Variable `OPS_D1_ID` が入っている
+- [ ] Worker `toinoba-ops` の secret に `OPS_TRIGGER_SECRET` と `PREVIEW_TOKEN`
+- [ ] Worker `toinoba` にも同じ `PREVIEW_TOKEN`（プレビューを使う場合）
+- [ ] `fixedCosts` が空配列ではない
+- [ ] （任意）impact の Campaigns が 200。トークンはチャットに出していない
 
 ---
 
@@ -256,4 +278,28 @@ curl -sS -u "$IMPACT_ACCOUNT_SID:$IMPACT_AUTH_TOKEN" \
 | モックでの企画・検品・Draft PR の試験 | 「実接続完了」と呼ぶこと |
 | 候補の公開情報調査（出典URLと確認日つき）。未確認は未確認のまま | 地域・日本語・報酬条件が分からないまま採用すること |
 
-提携待ちの間は、§1・§2 と、必要なら Anthropic キーまで進めてよい。impact の Token は、発行できたらパスワードマネージャに置き、Worker へ入れるのは Campaigns の 200 を確認してからでよい。
+提携待ちの間は、§1・§2・§4 と、必要なら Anthropic キーまで進めてよい。impact の Token は、発行できたらパスワードマネージャに置き、Worker へ入れるのは Campaigns の 200 を確認してからでよい。
+
+---
+
+## 4. 固定費 `fixedCosts`
+
+空配列のままだと有料生成は開始しない（`reserveBudget` が `missing_fixed`）。判定は配列の長さなので 1 件以上あれば通る。運用では実在する月額コストを書く。金額 0 のダミー行は使わない。
+
+編集先: [`data/ops-settings.json`](../data/ops-settings.json)。変更は PR で入れる（日常運用と同じ）。
+
+```json
+"fixedCosts": [
+  { "name": "workers-paid", "yenPerMonth": 750 },
+  { "name": "domain", "yenPerMonth": 150 }
+]
+```
+
+| フィールド | 制約 |
+|---|---|
+| `name` | 識別用の文字列。秘密は書かない |
+| `yenPerMonth` | 0 以上の整数（円） |
+
+月額上限は同ファイルの `monthlyCapYen`（初期値 5000）。固定費の合計が上限を食い潰すと生成枠が残らないので、Workers Paid・ドメイン月割り・AI 以外の実費だけを入れる。予備 500 円は `reserveBufferYen` 側であり、`fixedCosts` には書かない。
+
+確認: `fixedCosts` が 1 件以上ある PR をマージする。値を Issue やチャットに貼る必要はない。
