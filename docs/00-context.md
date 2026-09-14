@@ -117,6 +117,7 @@
 | [`docs/13-ops-runbook.md`](13-ops-runbook.md) | 日常運用・停止・復旧 |
 | [`docs/14-operator-handoff-prompt.md`](14-operator-handoff-prompt.md) | 別AIへの引き継ぎ文 |
 | [`docs/15-ops-initial-setup.md`](15-ops-initial-setup.md) | D1 / R2 / 秘密値 / 固定費 / impact.com の初期設定 |
+| [`docs/15-ops-initial-setup.copy.txt`](15-ops-initial-setup.copy.txt) | 上記手順のコピー用全文 |
 
 ## 品質ゲート
 

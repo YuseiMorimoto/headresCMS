@@ -1,5 +1,7 @@
 # 15. ops 初期設定の操作手順
 
+**コピーする:** 全文は [`15-ops-initial-setup.copy.txt`](15-ops-initial-setup.copy.txt)。GitHub ならファイル右上の **Copy raw file**、または **Raw** を開いて全選択。秘密値はコピー文に書いていない。
+
 対象ブランチ: `cursor/automation-ops-core-5354`  
 根拠: [`worker/ops/wrangler.jsonc`](../worker/ops/wrangler.jsonc)、[`.github/workflows/deploy-ops.yml`](../.github/workflows/deploy-ops.yml)、[`src/ops/auth.ts`](../src/ops/auth.ts)、[`src/ops/connectors/asp.ts`](../src/ops/connectors/asp.ts)、[`src/pages/preview/index.astro`](../src/pages/preview/index.astro)、[`data/ops-settings.json`](../data/ops-settings.json)
 

@@ -62,7 +62,7 @@
 
 ## 自動化運用（コードは実装済み・接続は外部依存）
 
-操作の詳細は [`docs/15-ops-initial-setup.md`](15-ops-initial-setup.md)。日常運用は [`docs/13-ops-runbook.md`](13-ops-runbook.md)。
+操作の詳細は [`docs/15-ops-initial-setup.md`](15-ops-initial-setup.md)。コピー用全文は [`docs/15-ops-initial-setup.copy.txt`](15-ops-initial-setup.copy.txt)。日常運用は [`docs/13-ops-runbook.md`](13-ops-runbook.md)。
 
 - [ ] Cloudflare で D1 `toinoba-ops` / R2 `toinoba-ops` を作成し `OPS_D1_ID` を Variables へ
 - [ ] `OPS_TRIGGER_SECRET` / `PREVIEW_TOKEN` を wrangler secret へ

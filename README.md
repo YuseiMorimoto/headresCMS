@@ -89,6 +89,7 @@ npm run sync-links -- --dry-run  # KV同期の検証のみ
 | 文書 | 内容 |
 |---|---|
 | [`docs/15-ops-initial-setup.md`](docs/15-ops-initial-setup.md) | D1 / R2 / 秘密値 / 固定費 / impact.com の初期設定手順 |
+| [`docs/15-ops-initial-setup.copy.txt`](docs/15-ops-initial-setup.copy.txt) | 上記手順のコピー用全文（Raw → 全選択） |
 | [`docs/13-ops-runbook.md`](docs/13-ops-runbook.md) | 日常運用・停止・復旧 |
 | [`docs/12-connection-matrix.md`](docs/12-connection-matrix.md) | ASP 接続の実装状態 |
 | [`docs/14-operator-handoff-prompt.md`](docs/14-operator-handoff-prompt.md) | 運営者の残作業を別AIに渡す文 |

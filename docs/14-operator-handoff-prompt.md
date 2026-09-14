@@ -26,6 +26,7 @@
 - `docs/12-connection-matrix.md` … ASP 接続の実装／未検証一覧
 - `docs/13-ops-runbook.md` … 日常運用・停止・復旧
 - `docs/15-ops-initial-setup.md` … D1 / R2 / 秘密値 / impact.com の具体的な操作手順
+- `docs/15-ops-initial-setup.copy.txt` … 上記手順のコピー用全文（GitHub の Copy raw file）
 - `data/ops-settings.json` … 本数・時刻・予算の設定マスタ
 - `data/links.json` … 案件リンクの Git マスタ（KV へ同期される）
 

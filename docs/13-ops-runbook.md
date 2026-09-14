@@ -4,7 +4,8 @@
 
 ## 初期設定
 
-詳細な操作手順（D1 / R2 / 秘密値 / impact.com）: [`docs/15-ops-initial-setup.md`](15-ops-initial-setup.md)
+詳細な操作手順（D1 / R2 / 秘密値 / impact.com）: [`docs/15-ops-initial-setup.md`](15-ops-initial-setup.md)  
+コピー用全文: [`docs/15-ops-initial-setup.copy.txt`](15-ops-initial-setup.copy.txt)（GitHub の Copy raw file / Raw → 全選択）
 
 1. Cloudflare で D1 `toinoba-ops` と R2 `toinoba-ops` を作る
 2. GitHub Variables に `OPS_D1_ID` を入れる
