@@ -4,6 +4,8 @@
 
 ## 初期設定
 
+詳細な操作手順（D1 / R2 / 秘密値 / impact.com）: [`docs/15-ops-initial-setup.md`](15-ops-initial-setup.md)
+
 1. Cloudflare で D1 `toinoba-ops` と R2 `toinoba-ops` を作る
 2. GitHub Variables に `OPS_D1_ID` を入れる
 3. `wrangler secret put OPS_TRIGGER_SECRET` / `PREVIEW_TOKEN`（16文字以上の英数と `_` `-`）

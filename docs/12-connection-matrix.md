@@ -19,3 +19,5 @@
 - [ ] Anthropic API キーと利用上限
 - [ ] Search Console 読み取り権限（既存 `GSC_SERVICE_ACCOUNT_JSON` の流用）
 - [ ] Cloudflare D1 / R2（ops 用）と `OPS_D1_ID` / `OPS_TRIGGER_SECRET` / `PREVIEW_TOKEN`
+
+操作手順: [`docs/15-ops-initial-setup.md`](15-ops-initial-setup.md)

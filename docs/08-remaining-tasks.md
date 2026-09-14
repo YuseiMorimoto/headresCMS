@@ -66,7 +66,8 @@
 - [ ] `OPS_TRIGGER_SECRET` / `PREVIEW_TOKEN` を wrangler secret へ
 - [ ] `data/ops-settings.json` の `fixedCosts` に実固定費を入れる（空だと有料生成は始まらない）
 - [ ] 採用案件と impact.com 資格が揃ったら `docs/12-connection-matrix.md` の実接続欄を更新
-- [ ] 手順: [`docs/13-ops-runbook.md`](13-ops-runbook.md)
+- [ ] 初期設定の操作手順: [`docs/15-ops-initial-setup.md`](15-ops-initial-setup.md)
+- [ ] 日常運用: [`docs/13-ops-runbook.md`](13-ops-runbook.md)
 
 ## 任意（運用開始後で可）
 
