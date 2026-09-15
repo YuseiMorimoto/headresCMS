@@ -7,6 +7,9 @@ const imageBase = resolveUrl(import.meta.env.PUBLIC_IMAGE_BASE, PRODUCTION_IMAGE
 /** 一覧ページと sitemap のページ数計算で共有する（値の乖離を防ぐ） */
 export const POSTS_PER_PAGE = 20;
 
+/** impact.com のサイト所有権確認。公開 HTML に出す値であり、API 秘密ではない。トップページの head のみ。 */
+export const IMPACT_SITE_VERIFICATION = "3412605a-25bd-4780-9514-8c384b3342cb";
+
 export const site = {
   name: "問いの場",
   catchphrase: "答えではなく、問いを。",

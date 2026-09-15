@@ -30,6 +30,8 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- ページ固有の head（所有権確認など）。charset / viewport の直後に出す -->
+    <slot name="head" />
     <SeoHead
       title={title}
       description={description}

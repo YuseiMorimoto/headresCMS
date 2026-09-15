@@ -3,7 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import PostCard from "@/components/ui/PostCard.astro";
 import { SITE_DESCRIPTION } from "@/config/brand.ts";
 import { CLUSTERS } from "@/config/clusters.ts";
-import { site } from "@/config/site.ts";
+import { IMPACT_SITE_VERIFICATION, site } from "@/config/site.ts";
 import { getPosts } from "@/lib/posts.ts";
 
 const posts = (await getPosts(({ data }) => !data.noindex)).sort(
@@ -22,6 +22,14 @@ const sortedClusters =
   description={SITE_DESCRIPTION}
   canonical={site.url}
 >
+  {/* impact.com は value 属性のスニペットを渡す。HTML の慣例に合わせて content も同じ値にする */}
+  <meta
+    slot="head"
+    name="impact-site-verification"
+    content={IMPACT_SITE_VERIFICATION}
+    value={IMPACT_SITE_VERIFICATION}
+  />
+
   <section class="mb-12">
     <h1 class="mb-4 text-3xl font-bold">{site.name}</h1>
     <p class="text-lg text-gray-600">{site.catchphrase}</p>
