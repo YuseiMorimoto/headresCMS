@@ -22,12 +22,10 @@ const sortedClusters =
   description={SITE_DESCRIPTION}
   canonical={site.url}
 >
-  {/* impact.com は value 属性のスニペットを渡す。HTML の慣例に合わせて content も同じ値にする */}
-  <meta
+  {/* impact のスニペットは value 属性。Astro の meta 型は content のみなので生 HTML で出す */}
+  <Fragment
     slot="head"
-    name="impact-site-verification"
-    content={IMPACT_SITE_VERIFICATION}
-    value={IMPACT_SITE_VERIFICATION}
+    set:html={`<meta name="impact-site-verification" content="${IMPACT_SITE_VERIFICATION}" value="${IMPACT_SITE_VERIFICATION}">`}
   />
 
   <section class="mb-12">
